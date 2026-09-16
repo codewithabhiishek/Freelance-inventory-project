@@ -97,9 +97,19 @@ export function Auth() {
           </div>
         </div>
 
-        <p className="text-center text-xs text-[#6F747C] mt-6">
-          © 2026 StockFlow. Built for modern businesses.
-        </p>
+        <div className="text-center text-xs text-[#6F747C] mt-6 space-y-1">
+          <p>© 2026 StockFlow. Enterprise Inventory & Billing.</p>
+          <p>
+            <a
+              href="https://abhiishek.is-a.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#9A9EA5] hover:text-[#F2F3F5] transition-colors underline underline-offset-4 decoration-[#25282C] hover:decoration-[#60A5FA]"
+            >
+              Built by Abhishek ↗
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
