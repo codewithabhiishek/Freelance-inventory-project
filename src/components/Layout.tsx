@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useStore } from '../store';
 import { PageKey } from '../types';
 import {
@@ -71,11 +72,11 @@ function GlobalSearch({ open, onClose }: { open: boolean; onClose: () => void })
       .forEach(s => results.push({ type: 'Sale', label: s.invoiceNumber, sublabel: s.customerName, page: 'sales' }));
   }
 
-  return (
-    <div className="fixed inset-0 z-[60] flex items-start justify-center pt-[15vh]">
-      <div className="absolute inset-0 bg-black/70 modal-backdrop animate-fade-in" onClick={onClose} />
-      <div className="relative w-full max-w-xl bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/40 animate-fade-in-scale inner-glow overflow-hidden">
-        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#25282C] bg-[#0C0D0F]/50">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[12vh] p-4">
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+      <div className="relative w-full max-w-xl bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/50 animate-fade-in-scale inner-glow overflow-hidden z-10">
+        <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#25282C] bg-[#0C0D0F]/80 backdrop-blur-sm">
           <Search size={16} className="text-[#6F747C]" />
           <input autoFocus value={query} onChange={e => setQuery(e.target.value)}
             placeholder="Search products, customers, invoices..."
@@ -109,18 +110,19 @@ function GlobalSearch({ open, onClose }: { open: boolean; onClose: () => void })
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
 // Keyboard Shortcuts Modal
 function ShortcutsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   if (!open) return null;
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 modal-backdrop animate-fade-in" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/40 animate-fade-in-scale inner-glow overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#25282C]">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+      <div className="relative w-full max-w-md bg-[#101214] border border-[#25282C] rounded-2xl shadow-2xl shadow-black/80 animate-fade-in-scale inner-glow overflow-hidden z-10 my-auto">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#25282C] bg-[#0C0D0F]/80 backdrop-blur-sm">
           <div className="flex items-center gap-2">
             <Keyboard size={16} className="text-[#9A9EA5]" />
             <h2 className="text-base font-semibold text-[#F2F3F5]">Keyboard Shortcuts</h2>
@@ -147,7 +149,8 @@ function ShortcutsModal({ open, onClose }: { open: boolean; onClose: () => void 
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -172,10 +175,10 @@ export function NotificationsModal({ open, onClose }: { open: boolean; onClose: 
     return true;
   });
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 modal-backdrop animate-fade-in" onClick={onClose} />
-      <div className="relative w-full max-w-xl bg-[#101214] border border-[#25282C] rounded-2xl shadow-2xl shadow-black/50 animate-fade-in-scale inner-glow overflow-hidden flex flex-col max-h-[85vh]">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+      <div className="relative w-full max-w-xl bg-[#101214] border border-[#25282C] rounded-2xl shadow-2xl shadow-black/80 animate-fade-in-scale inner-glow overflow-hidden flex flex-col max-h-[85vh] z-10 my-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#25282C] bg-[#0C0D0F]/80 backdrop-blur-sm">
           <div className="flex items-center gap-2.5">
@@ -350,7 +353,8 @@ export function NotificationsModal({ open, onClose }: { open: boolean; onClose: 
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Check, AlertTriangle, Search } from 'lucide-react';
 
 // Button
@@ -18,79 +19,95 @@ export function Button({ children, variant = 'primary', size = 'md', className =
 }
 
 // Input
-export function Input({ label, error, className = '', ...props }: {
-  label?: string; error?: string; className?: string;
-} & React.InputHTMLAttributes<HTMLInputElement>) {
+export function Input({ label, error, helperText, className = '', id, ...props }: React.InputHTMLAttributes<HTMLInputElement> & {
+  label?: string; error?: string; helperText?: string;
+}) {
+  const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
   return (
     <div className="space-y-1.5">
-      {label && <label className="text-xs font-medium text-[#9A9EA5]">{label}</label>}
-      <input className={`w-full bg-[#101214] border border-[#25282C] rounded-md px-3 py-2 text-sm text-[#F2F3F5] placeholder:text-[#6F747C] focus:border-[#3A3D42] transition-default ${error ? 'border-[#DC2626]' : ''} ${className}`} {...props} />
-      {error && <p className="text-xs text-[#F87171]">{error}</p>}
+      {label && <label htmlFor={inputId} className="block text-xs font-medium text-[#9A9EA5]">{label}</label>}
+      <input id={inputId} className={`w-full px-3 py-2 text-sm bg-[#151719] border border-[#25282C] rounded-lg text-[#F2F3F5] placeholder-[#495057] focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-all duration-200 ${error ? 'border-[#DC2626] focus:border-[#DC2626] focus:ring-[#DC2626]' : ''} ${className}`} {...props} />
+      {error && <p className="text-[11px] text-[#F87171]">{error}</p>}
+      {helperText && !error && <p className="text-[11px] text-[#495057]">{helperText}</p>}
     </div>
   );
 }
 
 // Select
-export function Select({ label, error, options, className = '', ...props }: {
-  label?: string; error?: string; options: { value: string; label: string }[]; className?: string;
-} & React.SelectHTMLAttributes<HTMLSelectElement>) {
+export function Select({ label, error, options, className = '', id, ...props }: React.SelectHTMLAttributes<HTMLSelectElement> & {
+  label?: string; error?: string; options: { value: string; label: string }[];
+}) {
+  const selectId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
   return (
     <div className="space-y-1.5">
-      {label && <label className="text-xs font-medium text-[#9A9EA5]">{label}</label>}
-      <select className={`w-full bg-[#101214] border border-[#25282C] rounded-md px-3 py-2 text-sm text-[#F2F3F5] focus:border-[#3A3D42] transition-default appearance-none ${className}`} {...props}>
-        {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+      {label && <label htmlFor={selectId} className="block text-xs font-medium text-[#9A9EA5]">{label}</label>}
+      <select id={selectId} className={`w-full px-3 py-2 text-sm bg-[#151719] border border-[#25282C] rounded-lg text-[#F2F3F5] focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-all duration-200 ${error ? 'border-[#DC2626]' : ''} ${className}`} {...props}>
+        {options.map(opt => <option key={opt.value} value={opt.value} className="bg-[#151719] text-[#F2F3F5]">{opt.label}</option>)}
       </select>
-      {error && <p className="text-xs text-[#F87171]">{error}</p>}
+      {error && <p className="text-[11px] text-[#F87171]">{error}</p>}
     </div>
   );
 }
 
 // Textarea
-export function Textarea({ label, error, className = '', ...props }: {
-  label?: string; error?: string; className?: string;
-} & React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+export function Textarea({ label, error, className = '', id, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  label?: string; error?: string;
+}) {
+  const textareaId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
   return (
     <div className="space-y-1.5">
-      {label && <label className="text-xs font-medium text-[#9A9EA5]">{label}</label>}
-      <textarea className={`w-full bg-[#101214] border border-[#25282C] rounded-md px-3 py-2 text-sm text-[#F2F3F5] placeholder:text-[#6F747C] focus:border-[#3A3D42] transition-default resize-none ${className}`} rows={3} {...props} />
-      {error && <p className="text-xs text-[#F87171]">{error}</p>}
+      {label && <label htmlFor={textareaId} className="block text-xs font-medium text-[#9A9EA5]">{label}</label>}
+      <textarea id={textareaId} className={`w-full px-3 py-2 text-sm bg-[#151719] border border-[#25282C] rounded-lg text-[#F2F3F5] placeholder-[#495057] focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-all duration-200 ${error ? 'border-[#DC2626]' : ''} ${className}`} {...props} />
+      {error && <p className="text-[11px] text-[#F87171]">{error}</p>}
     </div>
   );
 }
 
 // Badge
-export function Badge({ children, variant = 'default', className = '' }: {
-  children: ReactNode; variant?: 'default' | 'success' | 'warning' | 'error' | 'info' | 'neutral'; className?: string;
+export function Badge({ children, variant = 'neutral', className = '' }: {
+  children: ReactNode; variant?: 'success' | 'warning' | 'danger' | 'error' | 'info' | 'neutral' | 'default'; className?: string;
 }) {
   const variants = {
-    default: 'bg-[#1A1C1F] text-[#9A9EA5] border-[#25282C]',
     success: 'bg-[#34D399]/10 text-[#34D399] border-[#34D399]/20',
     warning: 'bg-[#FBBF24]/10 text-[#FBBF24] border-[#FBBF24]/20',
+    danger: 'bg-[#F87171]/10 text-[#F87171] border-[#F87171]/20',
     error: 'bg-[#F87171]/10 text-[#F87171] border-[#F87171]/20',
     info: 'bg-[#60A5FA]/10 text-[#60A5FA] border-[#60A5FA]/20',
     neutral: 'bg-[#151719] text-[#6F747C] border-[#25282C]',
+    default: 'bg-[#151719] text-[#6F747C] border-[#25282C]',
   };
   return <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium border ${variants[variant]} ${className}`}>{children}</span>;
 }
 
-// Modal
+// Modal (Portal-rendered for perfect screen centering)
 export function Modal({ open, onClose, title, children, size = 'md', footer }: {
   open: boolean; onClose: () => void; title: string; children: ReactNode; size?: 'sm' | 'md' | 'lg' | 'xl'; footer?: ReactNode;
 }) {
   if (!open) return null;
   const sizes = { sm: 'max-w-md', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' };
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 modal-backdrop animate-fade-in" onClick={onClose} />
-      <div className={`relative bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/40 w-full ${sizes[size]} max-h-[90vh] flex flex-col animate-fade-in-scale inner-glow`}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#25282C]">
-          <h2 className="text-base font-semibold text-[#F2F3F5]">{title}</h2>
-          <button onClick={onClose} className="p-1.5 rounded-md hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 hover:rotate-90"><X size={15} /></button>
+
+  return createPortal(
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      {/* Backdrop */}
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose} />
+      
+      {/* Modal Dialog */}
+      <div className={`relative bg-[#101214] border border-[#25282C] rounded-2xl shadow-2xl shadow-black/80 w-full ${sizes[size]} max-h-[88vh] flex flex-col animate-fade-in-scale inner-glow overflow-hidden z-10 my-auto`}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#25282C] bg-[#0C0D0F]/80 backdrop-blur-sm flex-shrink-0">
+          <h2 className="text-base font-semibold text-[#F2F3F5] tracking-tight">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 hover:rotate-90">
+            <X size={16} />
+          </button>
         </div>
-        <div className="px-5 py-4 overflow-y-auto flex-1">{children}</div>
-        {footer && <div className="px-5 py-3 border-t border-[#25282C] flex items-center justify-end gap-2 bg-[#0C0D0F]/50">{footer}</div>}
+        <div className="px-6 py-5 overflow-y-auto flex-1">{children}</div>
+        {footer && (
+          <div className="px-6 py-3.5 border-t border-[#25282C] flex items-center justify-end gap-2.5 bg-[#0C0D0F]/60 flex-shrink-0">
+            {footer}
+          </div>
+        )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
@@ -119,12 +136,13 @@ export function Toast({ message, type = 'success', onClose }: { message: string;
   const colors = { success: 'border-[#064E2B] bg-[#052E16]/95', error: 'border-[#7F1D1D] bg-[#450A0A]/95', warning: 'border-[#713F12] bg-[#422006]/95' };
   const textColors = { success: 'text-[#34D399]', error: 'text-[#F87171]', warning: 'text-[#FBBF24]' };
   const icons = { success: '✓', error: '✕', warning: '⚠' };
-  return (
-    <div className={`fixed bottom-5 right-5 z-[100] flex items-center gap-3 px-4 py-3.5 rounded-xl border backdrop-blur-md shadow-2xl shadow-black/30 ${colors[type]} animate-toast`}>
+  return createPortal(
+    <div className={`fixed bottom-5 right-5 z-[120] flex items-center gap-3 px-4 py-3.5 rounded-xl border backdrop-blur-md shadow-2xl shadow-black/30 ${colors[type]} animate-toast`}>
       <span className={`text-sm font-bold ${textColors[type]} w-5 h-5 flex items-center justify-center rounded-full bg-black/20`}>{icons[type]}</span>
       <span className={`text-sm font-medium ${textColors[type]}`}>{message}</span>
       <button onClick={onClose} className="text-[#6F747C] hover:text-[#F2F3F5] transition-colors ml-2"><X size={14} /></button>
-    </div>
+    </div>,
+    document.body
   );
 }
 
