@@ -387,84 +387,231 @@ button:focus-visible {
   --bg-surface: #F8F9FA;
   --bg-elevated: #F1F3F5;
   --bg-hover: #E9ECEF;
-  --border: #DEE2E6;
-  --border-light: #E9ECEF;
-  --text-primary: #1A1B1E;
-  --text-secondary: #495057;
-  --text-muted: #868E96;
+  --border: #E5E7EB;
+  --border-light: #F3F4F6;
+  --text-primary: #111827;
+  --text-secondary: #4B5563;
+  --text-muted: #6B7280;
 }
 
 .light body,
 body.light {
-  background-color: #FFFFFF;
-  color: #1A1B1E;
+  background-color: #F9FAFB;
+  color: #111827;
 }
 
+/* Header, Top Bar & Footers in Light Mode */
+.light header,
+.light .bg-\[\#090A0C\]\/80,
+.light .bg-\[\#0C0D0F\]\/80 {
+  background-color: rgba(255, 255, 255, 0.88) !important;
+  border-color: #E5E7EB !important;
+}
+
+.light footer,
+.light .bg-\[\#090A0C\]\/40 {
+  background-color: rgba(249, 250, 251, 0.75) !important;
+  border-color: #E5E7EB !important;
+}
+
+/* Backgrounds & Surfaces */
 .light .bg-\[\#090A0C\],
-.light .bg-\[\#0C0D0F\] {
+.light .bg-\[\#0B0B0C\],
+.light .bg-\[\#0C0D0F\],
+.light .bg-\[\#0D0E10\],
+.light .bg-\[\#111113\],
+.light .bg-\[\#161618\] {
   background-color: #FFFFFF !important;
 }
 
 .light .bg-\[\#101214\] {
-  background-color: #F8F9FA !important;
+  background-color: #FFFFFF !important;
 }
 
 .light .bg-\[\#151719\],
-.light .bg-\[\#1A1C1F\] {
-  background-color: #F1F3F5 !important;
-}
-
-.light .bg-\[\#0D0E10\] {
-  background-color: #F8F9FA !important;
-}
-
-.light .border-\[\#1E2024\],
-.light .border-\[\#25282C\] {
-  border-color: #DEE2E6 !important;
-}
-
-.light .border-\[\#1A1A1D\],
-.light .border-\[\#1E2024\] {
-  border-color: #F4F4F5 !important;
-}
-
-.light .text-\[\#F2F3F5\] {
-  color: #1A1B1E !important;
-}
-
-.light .text-\[\#9A9EA5\],
-.light .text-\[\#6F747C\] {
-  color: #495057 !important;
-}
-
-.light .hover\:bg-\[\#1A1C1F\]:hover,
-.light .hover\:bg-\[\#151719\]:hover {
-  background-color: #E9ECEF !important;
-}
-
-.light .hover\:text-\[\#F2F3F5\]:hover {
-  color: #1A1B1E !important;
-}
-
-.light .hover\:border-\[\#35383C\]:hover {
-  border-color: #ADB5BD !important;
+.light .bg-\[\#1A1C1F\],
+.light .bg-\[\#1C1C1F\],
+.light .bg-\[\#242428\] {
+  background-color: #F3F4F6 !important;
 }
 
 .light .bg-\[\#101214\]\/50,
-.light .bg-\[\#0C0D0F\]\/50 {
-  background-color: rgba(248, 249, 250, 0.8) !important;
+.light .bg-\[\#0C0D0F\]\/50,
+.light .bg-\[\#101214\]\/80 {
+  background-color: rgba(249, 250, 251, 0.9) !important;
 }
 
+/* Tables in Light Mode (No dark background on click/hover) */
+.light table {
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+}
+
+.light thead,
+.light thead tr {
+  background-color: #F9FAFB !important;
+  border-color: #E5E7EB !important;
+}
+
+.light th {
+  color: #4B5563 !important;
+}
+
+.light tbody tr,
+.light tr {
+  background-color: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+/* Table row hover and active states in Light Mode */
+.light tbody tr:hover,
+.light tr:hover,
+.light tr.hover\:bg-\[\#111113\]:hover,
+.light .hover\:bg-\[\#111113\]:hover,
+.light .hover\:bg-\[\#1C1C1F\]:hover,
+.light .hover\:bg-\[\#0D0E10\]:hover,
+.light .hover\:bg-\[\#151719\]:hover,
+.light .hover\:bg-\[\#1A1C1F\]:hover {
+  background-color: #F1F5F9 !important;
+}
+
+.light tbody tr:active,
+.light tr:active {
+  background-color: #E2E8F0 !important;
+}
+
+/* High contrast readable text in Light Mode */
+.light .text-\[\#EFEFF1\],
+.light .text-\[\#F2F3F5\],
+.light .text-\[\#E8E9EB\] {
+  color: #111827 !important;
+}
+
+.light .text-\[\#6B6B76\],
+.light .text-\[\#6F747C\],
+.light .text-\[\#9A9EA5\],
+.light .text-\[\#A1A1AA\] {
+  color: #4B5563 !important;
+}
+
+.light .hover\:text-\[\#EFEFF1\]:hover,
+.light .hover\:text-\[\#F2F3F5\]:hover {
+  color: #111827 !important;
+}
+
+/* Borders & Dividers */
+.light .border-\[\#1A1A1D\],
+.light .border-\[\#1E2024\],
+.light .border-\[\#242428\],
+.light .border-\[\#25282C\],
+.light .border-\[\#35383C\],
+.light .border-\[\#090A0C\] {
+  border-color: #E5E7EB !important;
+}
+
+.light .hover\:border-\[\#35383C\]:hover,
+.light .hover\:border-\[\#25282C\]:hover {
+  border-color: #CBD5E1 !important;
+}
+
+.light .divide-\[\#1E2024\] > :not([hidden]) ~ :not([hidden]),
+.light .divide-\[\#25282C\] > :not([hidden]) ~ :not([hidden]),
+.light .divide-\[\#1A1A1D\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #E5E7EB !important;
+}
+
+/* Inputs & Form Elements */
+.light input:not([type="checkbox"]):not([type="radio"]),
+.light select,
+.light textarea {
+  background-color: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+
+.light input:focus,
+.light select:focus,
+.light textarea:focus {
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: #9CA3AF !important;
+}
+
+.light kbd {
+  background-color: #F3F4F6 !important;
+  border-color: #E5E7EB !important;
+  color: #4B5563 !important;
+}
+
+/* Buttons in Light Mode */
+.light .btn-press.bg-\[\#1A1C1F\] {
+  background-color: #FFFFFF !important;
+  color: #111827 !important;
+  border-color: #E5E7EB !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+.light .btn-press.bg-\[\#1A1C1F\]:hover {
+  background-color: #F9FAFB !important;
+  border-color: #D1D5DB !important;
+}
+
+.light .hover\:bg-\[\#1A1C1F\]:hover,
+.light .hover\:bg-\[\#151719\]:hover,
+.light .hover\:bg-\[\#1C1C1F\]:hover {
+  background-color: #F1F5F9 !important;
+  color: #111827 !important;
+}
+
+/* Cards & KPI Cards */
+.light .kpi-card,
+.light .card-hover {
+  background-color: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+.light .kpi-card:hover,
+.light .card-hover:hover {
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Nav items */
+.light .nav-item {
+  color: #4B5563 !important;
+}
+.light .nav-item:hover {
+  background-color: #F3F4F6 !important;
+  color: #111827 !important;
+}
+.light .nav-item.active {
+  background-color: #E5E7EB !important;
+  color: #111827 !important;
+}
+.light .nav-item.active::before {
+  background-color: #111827 !important;
+}
+
+/* Modals, Overlays & Shadows */
+.light .bg-black\/80,
 .light .bg-black\/70,
 .light .bg-black\/60,
-.light .bg-black\/50 {
-  background-color: rgba(0, 0, 0, 0.3) !important;
+.light .bg-black\/50,
+.light .bg-black\/20 {
+  background-color: rgba(15, 23, 42, 0.45) !important;
 }
 
-.light .shadow-black\/30,
+.light .shadow-2xl,
+.light .shadow-black\/80,
+.light .shadow-black\/50,
 .light .shadow-black\/40,
+.light .shadow-black\/30,
 .light .shadow-black\/20 {
-  --tw-shadow-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
 }
 
 .light .inner-glow::before {
