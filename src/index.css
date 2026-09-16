@@ -435,10 +435,16 @@ body.light {
   background-color: #F3F4F6 !important;
 }
 
-.light .bg-\[\#101214\]\/50,
+/* Modal Header, Footer & Translucent Backgrounds in Light Mode */
+.light .modal-footer,
+.light .bg-\[\#0C0D0F\]\/60,
+.light .bg-\[\#0C0D0F\]\/80,
 .light .bg-\[\#0C0D0F\]\/50,
-.light .bg-\[\#101214\]\/80 {
-  background-color: rgba(249, 250, 251, 0.9) !important;
+.light .bg-\[\#101214\]\/50,
+.light .bg-\[\#101214\]\/80,
+.light .bg-\[\#151719\]\/60 {
+  background-color: #F9FAFB !important;
+  border-color: #E5E7EB !important;
 }
 
 /* Tables in Light Mode (No dark background on click/hover) */
@@ -549,15 +555,39 @@ body.light {
 }
 
 /* Buttons in Light Mode */
-.light .btn-press.bg-\[\#1A1C1F\] {
+.light .btn-press.bg-\[\#F2F3F5\],
+.light button.bg-\[\#F2F3F5\] {
+  background-color: #111827 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+.light .btn-press.bg-\[\#F2F3F5\]:hover,
+.light button.bg-\[\#F2F3F5\]:hover {
+  background-color: #1F2937 !important;
+  color: #FFFFFF !important;
+}
+
+.light .btn-press.bg-\[\#1A1C1F\],
+.light button.bg-\[\#1A1C1F\] {
   background-color: #FFFFFF !important;
   color: #111827 !important;
   border-color: #E5E7EB !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
-.light .btn-press.bg-\[\#1A1C1F\]:hover {
+.light .btn-press.bg-\[\#1A1C1F\]:hover,
+.light button.bg-\[\#1A1C1F\]:hover {
   background-color: #F9FAFB !important;
   border-color: #D1D5DB !important;
+}
+
+.light button.text-\[\#9A9EA5\],
+.light .btn-press.text-\[\#9A9EA5\] {
+  color: #4B5563 !important;
+}
+.light button.text-\[\#9A9EA5\]:hover,
+.light .btn-press.text-\[\#9A9EA5\]:hover {
+  background-color: #F3F4F6 !important;
+  color: #111827 !important;
 }
 
 .light .hover\:bg-\[\#1A1C1F\]:hover,

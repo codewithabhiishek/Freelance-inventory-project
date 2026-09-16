@@ -79,10 +79,65 @@ export function Badge({ children, variant = 'neutral', className = '' }: {
   return <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium border ${variants[variant]} ${className}`}>{children}</span>;
 }
 
-// Modal (Portal-rendered for perfect screen centering)
-export function Modal({ open, onClose, title, children, size = 'md', footer }: {
-  open: boolean; onClose: () => void; title: string; children: ReactNode; size?: 'sm' | 'md' | 'lg' | 'xl'; footer?: ReactNode;
+// Modal (Portal-rendered for perfect screen centering with full keyboard accessibility)
+export function Modal({ open, onClose, title, children, size = 'md', footer, onSubmit }: {
+  open: boolean; onClose: () => void; title: string; children: ReactNode; size?: 'sm' | 'md' | 'lg' | 'xl'; footer?: ReactNode; onSubmit?: () => void;
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Escape key to cancel / close modal
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+        return;
+      }
+
+      // Enter key to submit form / trigger primary action
+      if (e.key === 'Enter') {
+        const target = e.target as HTMLElement;
+        const isTextArea = target && target.tagName === 'TEXTAREA';
+        const isButton = target && target.tagName === 'BUTTON';
+
+        // In textarea, regular Enter creates newline unless Ctrl/Cmd is pressed
+        if (isTextArea && !e.ctrlKey && !e.metaKey) return;
+        if (isButton) return; // Allow native button click
+
+        if (dialogRef.current && dialogRef.current.contains(target)) {
+          e.preventDefault();
+
+          if (onSubmit) {
+            onSubmit();
+            return;
+          }
+
+          const submitBtn = dialogRef.current.querySelector<HTMLButtonElement>('button[type="submit"]');
+          if (submitBtn && !submitBtn.disabled) {
+            submitBtn.click();
+            return;
+          }
+
+          if (footerRef.current) {
+            const buttons = Array.from(footerRef.current.querySelectorAll<HTMLButtonElement>('button'));
+            // Find the last button (the primary action button: Create, Apply, Save, etc.)
+            const actionBtn = buttons.reverse().find(b => !b.disabled);
+            if (actionBtn) {
+              actionBtn.click();
+            }
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [open, onClose, onSubmit]);
+
   if (!open) return null;
   const sizes = { sm: 'max-w-md', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' };
 
@@ -92,16 +147,16 @@ export function Modal({ open, onClose, title, children, size = 'md', footer }: {
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose} />
       
       {/* Modal Dialog */}
-      <div className={`relative bg-[#101214] border border-[#25282C] rounded-2xl shadow-2xl shadow-black/80 w-full ${sizes[size]} max-h-[88vh] flex flex-col animate-fade-in-scale inner-glow overflow-hidden z-10 my-auto`}>
+      <div ref={dialogRef} className={`relative bg-[#101214] border border-[#25282C] rounded-2xl shadow-2xl shadow-black/80 w-full ${sizes[size]} max-h-[88vh] flex flex-col animate-fade-in-scale inner-glow overflow-hidden z-10 my-auto`}>
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#25282C] bg-[#0C0D0F]/80 backdrop-blur-sm flex-shrink-0">
           <h2 className="text-base font-semibold text-[#F2F3F5] tracking-tight">{title}</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 hover:rotate-90">
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 hover:rotate-90" title="Close (Esc)">
             <X size={16} />
           </button>
         </div>
         <div className="px-6 py-5 overflow-y-auto flex-1">{children}</div>
         {footer && (
-          <div className="px-6 py-3.5 border-t border-[#25282C] flex items-center justify-end gap-2.5 bg-[#0C0D0F]/60 flex-shrink-0">
+          <div ref={footerRef} className="modal-footer px-6 py-3.5 border-t border-[#25282C] flex items-center justify-end gap-2.5 bg-[#0C0D0F]/60 flex-shrink-0">
             {footer}
           </div>
         )}

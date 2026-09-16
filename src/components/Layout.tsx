@@ -46,7 +46,8 @@ const shortcuts = [
   { keys: ['I'], action: 'Go to inventory', description: 'Navigate to inventory page' },
   { keys: ['?'], action: 'Keyboard shortcuts', description: 'Show this help dialog' },
   { keys: ['T'], action: 'Toggle theme', description: 'Switch between light and dark mode' },
-  { keys: ['Esc'], action: 'Close', description: 'Close any open modal or panel' },
+  { keys: ['Esc'], action: 'Close / Cancel', description: 'Close any open modal or cancel action' },
+  { keys: ['Enter'], action: 'Submit / Apply', description: 'Apply or submit active modal form' },
 ];
 
 // Global Search Modal
