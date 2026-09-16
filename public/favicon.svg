@@ -1,0 +1,37 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#090A0C;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#151719;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#34D399;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#60A5FA;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" fill="url(#bgGrad)" rx="96"/>
+  
+  <!-- Subtle border -->
+  <rect width="512" height="512" fill="none" stroke="#25282C" stroke-width="4" rx="96"/>
+  
+  <!-- SF Monogram -->
+  <g transform="translate(256, 256)">
+    <!-- S Letter - Modern geometric style -->
+    <path d="M -100 -80 L -100 -40 L -40 -40 L -40 0 L -100 0 L -100 80 L 20 80 L 20 40 L -40 40 L -40 0 L 20 0 L 20 -80 Z" 
+          fill="#F2F3F5"/>
+    
+    <!-- F Letter - Modern geometric style -->
+    <path d="M 40 -80 L 40 80 L 120 80 L 120 40 L 80 40 L 80 10 L 120 10 L 120 -80 Z" 
+          fill="#F2F3F5"/>
+  </g>
+  
+  <!-- Flow accent line at bottom -->
+  <path d="M 100 420 Q 200 410, 256 420 T 412 420" 
+        stroke="url(#accentGrad)" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.8"/>
+  
+  <!-- Small decorative dots -->
+  <circle cx="120" cy="120" r="8" fill="#34D399" opacity="0.3"/>
+  <circle cx="392" cy="392" r="8" fill="#60A5FA" opacity="0.3"/>
+</svg>
