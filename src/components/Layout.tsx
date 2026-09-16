@@ -308,8 +308,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
               )}
             </button>
             {notifOpen && (
-              <div className="fixed inset-0 z-40" onClick={() => setNotifOpen(false)}>
-                <div className="absolute right-4 lg:right-6 top-14 w-[calc(100vw-2rem)] max-w-sm bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/30 z-50 animate-slide-down inner-glow overflow-hidden" onClick={e => e.stopPropagation()}>
+              <>
+                {/* Backdrop */}
+                <div className="fixed inset-0 z-30 bg-black/20 animate-fade-in" onClick={() => setNotifOpen(false)} />
+                
+                {/* Notification Panel */}
+                <div className="absolute right-0 top-full mt-2 w-80 bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/30 z-40 animate-slide-down inner-glow overflow-hidden">
                   <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#25282C] bg-[#0C0D0F]/50">
                     <div className="flex items-center gap-2">
                       <Bell size={14} className="text-[#9A9EA5]" />
@@ -368,7 +372,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     </div>
                   )}
                 </div>
-              </div>
+              </>
             )}
           </div>
 
