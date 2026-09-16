@@ -296,7 +296,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </button>
 
           {/* Notifications */}
-          <div className="relative" ref={notifRef}>
+          <div ref={notifRef}>
             <button onClick={() => setNotifOpen(!notifOpen)} 
               className="relative p-2 rounded-lg hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 btn-press group/bell"
               title="Notifications">
@@ -307,74 +307,76 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 </span>
               )}
             </button>
-            {notifOpen && (
-              <>
-                {/* Backdrop */}
-                <div className="fixed inset-0 z-30 bg-black/20 animate-fade-in" onClick={() => setNotifOpen(false)} />
-                
-                {/* Notification Panel */}
-                <div className="absolute right-0 top-full mt-2 w-80 bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/30 z-40 animate-slide-down inner-glow overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#25282C] bg-[#0C0D0F]/50">
-                    <div className="flex items-center gap-2">
-                      <Bell size={14} className="text-[#9A9EA5]" />
-                      <span className="text-sm font-semibold text-[#F2F3F5]">Notifications</span>
-                      {unreadCount > 0 && <span className="text-[10px] font-bold text-white bg-[#F87171] px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{unreadCount}</span>}
-                    </div>
-                    <button onClick={() => useStore.getState().markAllNotificationsRead()} className="text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors font-medium flex items-center gap-1 btn-press">
-                      <Check size={11} /> Mark all read
-                    </button>
+          </div>
+          
+          {/* Notification Panel - rendered at root level with fixed positioning */}
+          {notifOpen && (
+            <>
+              {/* Backdrop */}
+              <div className="fixed inset-0 z-[9998] bg-black/20 animate-fade-in" onClick={() => setNotifOpen(false)} />
+              
+              {/* Notification Panel */}
+              <div className="fixed top-[4.5rem] right-4 lg:right-6 w-80 bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/30 z-[9999] animate-slide-down inner-glow overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#25282C] bg-[#0C0D0F]/50">
+                  <div className="flex items-center gap-2">
+                    <Bell size={14} className="text-[#9A9EA5]" />
+                    <span className="text-sm font-semibold text-[#F2F3F5]">Notifications</span>
+                    {unreadCount > 0 && <span className="text-[10px] font-bold text-white bg-[#F87171] px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{unreadCount}</span>}
                   </div>
-                  <div className="max-h-[60vh] overflow-y-auto">
-                    {notifications.length === 0 ? (
-                      <div className="px-4 py-12 text-center">
-                        <div className="w-12 h-12 rounded-full bg-[#151719] border border-[#25282C] flex items-center justify-center mx-auto mb-3">
-                          <Bell size={18} className="text-[#6F747C]" />
-                        </div>
-                        <p className="text-sm text-[#6F747C]">No notifications yet</p>
+                  <button onClick={() => useStore.getState().markAllNotificationsRead()} className="text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors font-medium flex items-center gap-1 btn-press">
+                    <Check size={11} /> Mark all read
+                  </button>
+                </div>
+                <div className="max-h-[60vh] overflow-y-auto">
+                  {notifications.length === 0 ? (
+                    <div className="px-4 py-12 text-center">
+                      <div className="w-12 h-12 rounded-full bg-[#151719] border border-[#25282C] flex items-center justify-center mx-auto mb-3">
+                        <Bell size={18} className="text-[#6F747C]" />
                       </div>
-                    ) : (
-                      notifications.slice(0, 15).map((n, i) => (
-                        <div key={n.id} onClick={() => { useStore.getState().markNotificationRead(n.id); setNotifOpen(false); }}
-                          className={`px-4 py-3 border-b border-[#1E2024] last:border-0 cursor-pointer hover:bg-[#151719] transition-all duration-200 border-l-2 animate-fade-in ${!n.read ? 'bg-[#0D0E10] border-l-[#60A5FA]' : 'border-l-transparent'}`}
-                          style={{ animationDelay: `${i * 30}ms` }}>
-                          <div className="flex items-start gap-3">
-                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200 hover:scale-110 ${
-                              n.type === 'low_stock' ? 'bg-[#FBBF24]/10 text-[#FBBF24]' :
-                              n.type === 'out_of_stock' ? 'bg-[#F87171]/10 text-[#F87171]' :
-                              n.type === 'overdue_invoice' ? 'bg-[#F87171]/10 text-[#F87171]' :
-                              n.type === 'payment_received' ? 'bg-[#34D399]/10 text-[#34D399]' :
-                              'bg-[#60A5FA]/10 text-[#60A5FA]'
-                            }`}>
-                              {n.type === 'low_stock' ? <Package size={14} /> :
-                               n.type === 'out_of_stock' ? <Package size={14} /> :
-                               n.type === 'overdue_invoice' ? <FileText size={14} /> :
-                               n.type === 'payment_received' ? <CreditCard size={14} /> :
-                               <Bell size={14} />}
+                      <p className="text-sm text-[#6F747C]">No notifications yet</p>
+                    </div>
+                  ) : (
+                    notifications.slice(0, 15).map((n, i) => (
+                      <div key={n.id} onClick={() => { useStore.getState().markNotificationRead(n.id); setNotifOpen(false); }}
+                        className={`px-4 py-3 border-b border-[#1E2024] last:border-0 cursor-pointer hover:bg-[#151719] transition-all duration-200 border-l-2 animate-fade-in ${!n.read ? 'bg-[#0D0E10] border-l-[#60A5FA]' : 'border-l-transparent'}`}
+                        style={{ animationDelay: `${i * 30}ms` }}>
+                        <div className="flex items-start gap-3">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200 hover:scale-110 ${
+                            n.type === 'low_stock' ? 'bg-[#FBBF24]/10 text-[#FBBF24]' :
+                            n.type === 'out_of_stock' ? 'bg-[#F87171]/10 text-[#F87171]' :
+                            n.type === 'overdue_invoice' ? 'bg-[#F87171]/10 text-[#F87171]' :
+                            n.type === 'payment_received' ? 'bg-[#34D399]/10 text-[#34D399]' :
+                            'bg-[#60A5FA]/10 text-[#60A5FA]'
+                          }`}>
+                            {n.type === 'low_stock' ? <Package size={14} /> :
+                             n.type === 'out_of_stock' ? <Package size={14} /> :
+                             n.type === 'overdue_invoice' ? <FileText size={14} /> :
+                             n.type === 'payment_received' ? <CreditCard size={14} /> :
+                             <Bell size={14} />}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="text-xs font-semibold text-[#F2F3F5]">{n.title}</p>
+                              {!n.read && <span className="w-2 h-2 rounded-full bg-[#60A5FA] flex-shrink-0 mt-1" />}
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-start justify-between gap-2">
-                                <p className="text-xs font-semibold text-[#F2F3F5]">{n.title}</p>
-                                {!n.read && <span className="w-2 h-2 rounded-full bg-[#60A5FA] flex-shrink-0 mt-1" />}
-                              </div>
-                              <p className="text-[11px] text-[#6F747C] mt-0.5 leading-relaxed">{n.message}</p>
-                              <p className="text-[10px] text-[#495057] mt-1">{n.date}</p>
-                            </div>
+                            <p className="text-[11px] text-[#6F747C] mt-0.5 leading-relaxed">{n.message}</p>
+                            <p className="text-[10px] text-[#495057] mt-1">{n.date}</p>
                           </div>
                         </div>
-                      ))
-                    )}
-                  </div>
-                  {notifications.length > 0 && (
-                    <div className="px-4 py-2.5 border-t border-[#25282C] bg-[#0C0D0F]/30">
-                      <button onClick={() => { setNotifOpen(false); }} className="w-full text-center text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors font-medium btn-press py-1">
-                        View all notifications
-                      </button>
-                    </div>
+                      </div>
+                    ))
                   )}
                 </div>
-              </>
-            )}
-          </div>
+                {notifications.length > 0 && (
+                  <div className="px-4 py-2.5 border-t border-[#25282C] bg-[#0C0D0F]/30">
+                    <button onClick={() => { setNotifOpen(false); }} className="w-full text-center text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors font-medium btn-press py-1">
+                      View all notifications
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
 
           {/* Shortcuts hint */}
           <button onClick={() => setShortcutsOpen(true)}
