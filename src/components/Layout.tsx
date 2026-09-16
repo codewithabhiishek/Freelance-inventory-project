@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import { PageKey } from '../types';
 import {
   LayoutDashboard, Package, Warehouse, ShoppingCart, Truck, Users, Building2,
   FileText, CreditCard, Receipt, BarChart3, UserCog, Settings, Search, Bell,
-  Plus, ChevronLeft, LogOut, Menu, Command, ArrowRight
+  Plus, LogOut, Menu, Command, ArrowRight, Sun, Moon, Keyboard, X, Check
 } from 'lucide-react';
 import { Button, Badge, formatCurrency } from './ui';
 
@@ -36,15 +36,23 @@ const breadcrumbs: Record<PageKey, string> = {
   payments: 'Payments', expenses: 'Expenses', reports: 'Reports', users: 'Users', settings: 'Settings',
 };
 
+const shortcuts = [
+  { keys: ['⌘', 'K'], action: 'Open search', description: 'Search products, customers, invoices' },
+  { keys: ['N'], action: 'New sale', description: 'Create a new sale' },
+  { keys: ['G'], action: 'Go to dashboard', description: 'Navigate to dashboard' },
+  { keys: ['P'], action: 'Go to products', description: 'Navigate to products page' },
+  { keys: ['I'], action: 'Go to inventory', description: 'Navigate to inventory page' },
+  { keys: ['?'], action: 'Keyboard shortcuts', description: 'Show this help dialog' },
+  { keys: ['T'], action: 'Toggle theme', description: 'Switch between light and dark mode' },
+  { keys: ['Esc'], action: 'Close', description: 'Close any open modal or panel' },
+];
+
 // Global Search Modal
 function GlobalSearch({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [query, setQuery] = useState('');
   const store = useStore();
   
-  useEffect(() => {
-    if (open) setQuery('');
-  }, [open]);
-
+  useEffect(() => { if (open) setQuery(''); }, [open]);
   if (!open) return null;
 
   const results: { type: string; label: string; sublabel: string; page: PageKey }[] = [];
@@ -104,26 +112,95 @@ function GlobalSearch({ open, onClose }: { open: boolean; onClose: () => void })
   );
 }
 
+// Keyboard Shortcuts Modal
+function ShortcutsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/70 modal-backdrop animate-fade-in" onClick={onClose} />
+      <div className="relative w-full max-w-md bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/40 animate-fade-in-scale inner-glow overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#25282C]">
+          <div className="flex items-center gap-2">
+            <Keyboard size={16} className="text-[#9A9EA5]" />
+            <h2 className="text-base font-semibold text-[#F2F3F5]">Keyboard Shortcuts</h2>
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-md hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 hover:rotate-90"><X size={15} /></button>
+        </div>
+        <div className="px-5 py-4 max-h-[60vh] overflow-y-auto">
+          <div className="space-y-1">
+            {shortcuts.map((s, i) => (
+              <div key={i} className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-[#151719] transition-all duration-200 group" style={{ animationDelay: `${i * 30}ms` }}>
+                <div>
+                  <p className="text-sm font-medium text-[#F2F3F5]">{s.action}</p>
+                  <p className="text-[11px] text-[#6F747C] mt-0.5">{s.description}</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  {s.keys.map((key, ki) => (
+                    <React.Fragment key={ki}>
+                      <kbd className="px-2 py-1 text-[11px] font-mono font-medium text-[#9A9EA5] bg-[#151719] border border-[#25282C] rounded-md group-hover:border-[#35383C] transition-colors min-w-[24px] text-center">{key}</kbd>
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { currentPage, setCurrentPage, sidebarCollapsed, toggleSidebar, currentUser, logout, notifications, settings } = useStore();
+  const { currentPage, setCurrentPage, sidebarCollapsed, toggleSidebar, currentUser, logout, notifications, settings, theme, toggleTheme, shortcutsOpen, setShortcutsOpen } = useStore();
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  // Close notification panel on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT';
+      
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setSearchOpen(o => !o); }
-      if (e.key === 'Escape') { setSearchOpen(false); setNotifOpen(false); }
+      if (e.key === 'Escape') { setSearchOpen(false); setNotifOpen(false); setShortcutsOpen(false); }
+      
+      if (!isInput && !searchOpen && !notifOpen && !shortcutsOpen) {
+        if (e.key === '?') { e.preventDefault(); setShortcutsOpen(true); }
+        if (e.key === 'n' || e.key === 'N') { setCurrentPage('sales'); }
+        if (e.key === 'g' || e.key === 'G') { setCurrentPage('dashboard'); }
+        if (e.key === 'p' || e.key === 'P') { setCurrentPage('products'); }
+        if (e.key === 'i' || e.key === 'I') { setCurrentPage('inventory'); }
+        if (e.key === 't' || e.key === 'T') { toggleTheme(); }
+      }
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
-  }, []);
+  }, [searchOpen, notifOpen, shortcutsOpen]);
+
+  // Apply theme class to document
+  useEffect(() => {
+    document.documentElement.classList.toggle('light', theme === 'light');
+    document.body.classList.toggle('light', theme === 'light');
+  }, [theme]);
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#090A0C]">
       {/* Mobile overlay */}
-      {mobileMenuOpen && <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={() => setMobileMenuOpen(false)} />}
+      {mobileMenuOpen && <div className="fixed inset-0 z-30 bg-black/50 lg:hidden animate-fade-in" onClick={() => setMobileMenuOpen(false)} />}
       
       {/* Sidebar */}
       <aside className={`fixed lg:static inset-y-0 left-0 z-40 flex flex-col bg-[#0C0D0F] border-r border-[#1E2024] transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${sidebarCollapsed ? 'w-[60px]' : 'w-[220px]'} ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
@@ -201,57 +278,106 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Search */}
           <button onClick={() => setSearchOpen(true)}
-            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#101214] border border-[#25282C] text-[#6F747C] hover:border-[#35383C] transition-default">
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#101214] border border-[#25282C] text-[#6F747C] hover:border-[#35383C] transition-all duration-200 btn-press">
             <Search size={13} />
             <span className="text-xs">Search...</span>
             <kbd className="px-1 py-0.5 text-[9px] bg-[#151719] border border-[#25282C] rounded">⌘K</kbd>
           </button>
 
+          {/* Theme Toggle */}
+          <button onClick={toggleTheme}
+            className="p-2 rounded-lg hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 btn-press group"
+            title="Toggle theme (T)">
+            {theme === 'dark' ? (
+              <Sun size={16} className="transition-transform duration-300 group-hover:rotate-45" />
+            ) : (
+              <Moon size={16} className="transition-transform duration-300 group-hover:-rotate-12" />
+            )}
+          </button>
+
           {/* Notifications */}
-          <div className="relative">
-            <button onClick={() => setNotifOpen(!notifOpen)} className="relative p-2 rounded-lg hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 btn-press">
-              <Bell size={16} />
+          <div className="relative" ref={notifRef}>
+            <button onClick={() => setNotifOpen(!notifOpen)} 
+              className="relative p-2 rounded-lg hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 btn-press group/bell"
+              title="Notifications">
+              <Bell size={16} className={`transition-transform duration-200 ${notifOpen ? 'animate-bell-ring' : 'group-hover/bell:scale-110'}`} />
               {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#F87171] rounded-full notif-dot">
-                  <span className="absolute inset-0 rounded-full bg-[#F87171]" />
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center px-1 bg-[#F87171] text-white text-[10px] font-bold rounded-full border-2 border-[#090A0C] animate-count-pop shadow-lg shadow-red-500/20">
+                  {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
             </button>
             {notifOpen && (
-              <div className="absolute right-0 mt-2 w-80 bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/30 z-50 animate-slide-down inner-glow overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#25282C] bg-[#0C0D0F]/50">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-[#F2F3F5]">Notifications</span>
-                    {unreadCount > 0 && <span className="text-[10px] font-bold text-[#F87171] bg-[#F87171]/10 px-1.5 py-0.5 rounded-full">{unreadCount}</span>}
-                  </div>
-                  <button onClick={() => useStore.getState().markAllNotificationsRead()} className="text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors font-medium">Mark all read</button>
-                </div>
-                <div className="max-h-[60vh] overflow-y-auto">
-                  {notifications.slice(0, 10).map((n, i) => (
-                    <div key={n.id} onClick={() => { useStore.getState().markNotificationRead(n.id); setNotifOpen(false); }}
-                      className={`px-4 py-3 border-b border-[#1E2024] cursor-pointer hover:bg-[#151719] transition-all duration-200 border-l-2 ${!n.read ? 'bg-[#0D0E10] border-l-[#60A5FA]' : 'border-l-transparent'}`}
-                      style={{ animationDelay: `${i * 30}ms` }}>
-                      <div className="flex items-start gap-2.5">
-                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                          n.type === 'low_stock' ? 'bg-[#FBBF24]/10 text-[#FBBF24]' :
-                          n.type === 'out_of_stock' ? 'bg-[#F87171]/10 text-[#F87171]' :
-                          n.type === 'overdue_invoice' ? 'bg-[#F87171]/10 text-[#F87171]' :
-                          n.type === 'payment_received' ? 'bg-[#34D399]/10 text-[#34D399]' :
-                          'bg-[#60A5FA]/10 text-[#60A5FA]'
-                        }`}>
-                          <Bell size={12} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium text-[#F2F3F5]">{n.title}</p>
-                          <p className="text-[11px] text-[#6F747C] mt-0.5 line-clamp-2">{n.message}</p>
-                        </div>
-                      </div>
+              <div className="fixed inset-0 z-40" onClick={() => setNotifOpen(false)}>
+                <div className="absolute right-4 lg:right-6 top-14 w-[calc(100vw-2rem)] max-w-sm bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/30 z-50 animate-slide-down inner-glow overflow-hidden" onClick={e => e.stopPropagation()}>
+                  <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#25282C] bg-[#0C0D0F]/50">
+                    <div className="flex items-center gap-2">
+                      <Bell size={14} className="text-[#9A9EA5]" />
+                      <span className="text-sm font-semibold text-[#F2F3F5]">Notifications</span>
+                      {unreadCount > 0 && <span className="text-[10px] font-bold text-white bg-[#F87171] px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{unreadCount}</span>}
                     </div>
-                  ))}
+                    <button onClick={() => useStore.getState().markAllNotificationsRead()} className="text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors font-medium flex items-center gap-1 btn-press">
+                      <Check size={11} /> Mark all read
+                    </button>
+                  </div>
+                  <div className="max-h-[60vh] overflow-y-auto">
+                    {notifications.length === 0 ? (
+                      <div className="px-4 py-12 text-center">
+                        <div className="w-12 h-12 rounded-full bg-[#151719] border border-[#25282C] flex items-center justify-center mx-auto mb-3">
+                          <Bell size={18} className="text-[#6F747C]" />
+                        </div>
+                        <p className="text-sm text-[#6F747C]">No notifications yet</p>
+                      </div>
+                    ) : (
+                      notifications.slice(0, 15).map((n, i) => (
+                        <div key={n.id} onClick={() => { useStore.getState().markNotificationRead(n.id); setNotifOpen(false); }}
+                          className={`px-4 py-3 border-b border-[#1E2024] last:border-0 cursor-pointer hover:bg-[#151719] transition-all duration-200 border-l-2 animate-fade-in ${!n.read ? 'bg-[#0D0E10] border-l-[#60A5FA]' : 'border-l-transparent'}`}
+                          style={{ animationDelay: `${i * 30}ms` }}>
+                          <div className="flex items-start gap-3">
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-transform duration-200 hover:scale-110 ${
+                              n.type === 'low_stock' ? 'bg-[#FBBF24]/10 text-[#FBBF24]' :
+                              n.type === 'out_of_stock' ? 'bg-[#F87171]/10 text-[#F87171]' :
+                              n.type === 'overdue_invoice' ? 'bg-[#F87171]/10 text-[#F87171]' :
+                              n.type === 'payment_received' ? 'bg-[#34D399]/10 text-[#34D399]' :
+                              'bg-[#60A5FA]/10 text-[#60A5FA]'
+                            }`}>
+                              {n.type === 'low_stock' ? <Package size={14} /> :
+                               n.type === 'out_of_stock' ? <Package size={14} /> :
+                               n.type === 'overdue_invoice' ? <FileText size={14} /> :
+                               n.type === 'payment_received' ? <CreditCard size={14} /> :
+                               <Bell size={14} />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-2">
+                                <p className="text-xs font-semibold text-[#F2F3F5]">{n.title}</p>
+                                {!n.read && <span className="w-2 h-2 rounded-full bg-[#60A5FA] flex-shrink-0 mt-1" />}
+                              </div>
+                              <p className="text-[11px] text-[#6F747C] mt-0.5 leading-relaxed">{n.message}</p>
+                              <p className="text-[10px] text-[#495057] mt-1">{n.date}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  {notifications.length > 0 && (
+                    <div className="px-4 py-2.5 border-t border-[#25282C] bg-[#0C0D0F]/30">
+                      <button onClick={() => { setNotifOpen(false); }} className="w-full text-center text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors font-medium btn-press py-1">
+                        View all notifications
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
+
+          {/* Shortcuts hint */}
+          <button onClick={() => setShortcutsOpen(true)}
+            className="hidden lg:flex p-2 rounded-lg hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 btn-press group"
+            title="Keyboard shortcuts (?)">
+            <Keyboard size={16} className="transition-transform duration-200 group-hover:scale-110" />
+          </button>
 
           {/* Quick action */}
           <Button size="sm" variant="secondary" onClick={() => setCurrentPage('sales')} className="hidden sm:inline-flex">
@@ -263,9 +389,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <main className="flex-1 overflow-y-auto">
           {children}
         </main>
+
+        {/* Floating shortcut hint */}
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none opacity-0 hover:opacity-100 transition-opacity duration-300 group/hint">
+          <div className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#101214] border border-[#25282C] shadow-lg shadow-black/20 opacity-0 group-hover/hint:opacity-100 transition-all duration-300 translate-y-2 group-hover/hint:translate-y-0">
+            <Keyboard size={11} className="text-[#6F747C]" />
+            <span className="text-[10px] text-[#6F747C]">Press</span>
+            <kbd className="px-1.5 py-0.5 text-[10px] font-mono text-[#9A9EA5] bg-[#151719] border border-[#25282C] rounded">?</kbd>
+            <span className="text-[10px] text-[#6F747C]">for shortcuts</span>
+          </div>
+        </div>
       </div>
 
       <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <ShortcutsModal open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
     </div>
   );
 }

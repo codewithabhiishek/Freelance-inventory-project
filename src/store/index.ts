@@ -24,6 +24,14 @@ interface AppState {
   sidebarCollapsed: boolean;
   toggleSidebar: () => void;
 
+  // Theme
+  theme: 'dark' | 'light';
+  toggleTheme: () => void;
+
+  // Shortcuts
+  shortcutsOpen: boolean;
+  setShortcutsOpen: (open: boolean) => void;
+
   // Data
   users: User[];
   products: Product[];
@@ -114,6 +122,14 @@ export const useStore = create<AppState>()(
       setCurrentPage: (page) => set({ currentPage: page }),
       sidebarCollapsed: false,
       toggleSidebar: () => set(s => ({ sidebarCollapsed: !s.sidebarCollapsed })),
+
+      // Theme
+      theme: 'dark',
+      toggleTheme: () => set(s => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
+
+      // Shortcuts
+      shortcutsOpen: false,
+      setShortcutsOpen: (open) => set({ shortcutsOpen: open }),
 
       // Data
       users: seedUsers,
@@ -446,6 +462,7 @@ export const useStore = create<AppState>()(
       partialize: (state) => ({
         currentUser: state.currentUser,
         isAuthenticated: state.isAuthenticated,
+        theme: state.theme,
         products: state.products,
         customers: state.customers,
         suppliers: state.suppliers,

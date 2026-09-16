@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../store';
 import { Button, Input } from '../components/ui';
-import { Lock, Mail, ArrowRight, Shield, Zap, BarChart3 } from 'lucide-react';
+import { Lock, Mail, ArrowRight, Shield, Zap, BarChart3, Sun, Moon } from 'lucide-react';
 
 export function Auth() {
-  const { login, users } = useStore();
+  const { login, users, theme, toggleTheme } = useStore();
   const [email, setEmail] = useState('arjun@stockflow.io');
   const [password, setPassword] = useState('admin123');
   const [error, setError] = useState('');
@@ -12,6 +12,17 @@ export function Auth() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { setTimeout(() => setMounted(true), 100); }, []);
+
+  // Apply theme
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.add('light');
+      document.body.classList.add('light');
+    } else {
+      document.documentElement.classList.remove('light');
+      document.body.classList.remove('light');
+    }
+  }, [theme]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +37,15 @@ export function Auth() {
 
   return (
     <div className="min-h-screen flex bg-[#090A0C] overflow-hidden relative">
+      {/* Theme toggle */}
+      <button onClick={toggleTheme}
+        className="absolute top-5 right-5 z-50 p-2.5 rounded-xl bg-[#101214] border border-[#25282C] hover:border-[#35383C] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-300 btn-press group/theme shadow-lg shadow-black/20">
+        {theme === 'dark' ? (
+          <Sun size={16} className="transition-transform duration-300 group-hover/theme:rotate-45" />
+        ) : (
+          <Moon size={16} className="transition-transform duration-300 group-hover/theme:-rotate-12" />
+        )}
+      </button>
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 -left-32 w-96 h-96 bg-[#34D399]/[0.02] rounded-full blur-3xl animate-float" />
