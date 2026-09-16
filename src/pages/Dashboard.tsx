@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useStore } from '../store';
 import { StatCard, Badge, formatCurrency, formatDate } from '../components/ui';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { TrendingUp, Package, CreditCard, DollarSign, AlertTriangle } from 'lucide-react';
+import { TrendingUp, Package, CreditCard, IndianRupee, AlertTriangle } from 'lucide-react';
 
 export function Dashboard() {
   const { products, sales, invoices, payments, expenses, settings } = useStore();
@@ -69,7 +69,7 @@ export function Dashboard() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 stagger-children">
-        <StatCard label="Total Revenue" value={formatCurrency(totalRevenue)} change="12.5% vs last month" changeType="up" icon={<DollarSign size={14} />} />
+        <StatCard label="Total Revenue" value={formatCurrency(totalRevenue)} change="12.5% vs last month" changeType="up" icon={<IndianRupee size={14} />} />
         <StatCard label="Total Sales" value={totalSales.toString()} change="8 new this week" changeType="up" icon={<TrendingUp size={14} />} />
         <StatCard label="Inventory Value" value={formatCurrency(inventoryValue)} change={`${products.length} products`} changeType="neutral" icon={<Package size={14} />} />
         <StatCard label="Outstanding" value={formatCurrency(outstandingPayments)} change={`${invoices.filter(i => i.status === 'overdue').length} overdue`} changeType={outstandingPayments > 50000 ? 'down' : 'neutral'} icon={<CreditCard size={14} />} />
