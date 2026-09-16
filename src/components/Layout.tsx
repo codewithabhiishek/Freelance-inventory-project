@@ -456,49 +456,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </nav>
         
         {/* Bottom */}
-        <div className="border-t border-[#1E2024] p-2 space-y-1">
+        <div className="border-t border-[#1E2024] p-2">
           {!sidebarCollapsed ? (
-            <>
-              <div className="flex items-center gap-2.5 px-2 py-1.5">
-                <div className="w-7 h-7 rounded-full bg-[#1A1C1F] border border-[#25282C] flex items-center justify-center text-xs font-medium text-[#9A9EA5]">
-                  {currentUser?.name?.charAt(0) || 'U'}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium text-[#F2F3F5] truncate">{currentUser?.name}</p>
-                  <p className="text-[10px] text-[#6F747C] capitalize">{currentUser?.role}</p>
-                </div>
-                <button onClick={logout} className="p-1 rounded hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F87171] transition-default" title="Log out">
-                  <LogOut size={14} />
-                </button>
+            <div className="flex items-center gap-2.5 px-2 py-1.5">
+              <div className="w-7 h-7 rounded-full bg-[#1A1C1F] border border-[#25282C] flex items-center justify-center text-xs font-medium text-[#9A9EA5]">
+                {currentUser?.name?.charAt(0) || 'U'}
               </div>
-              <a
-                href="https://abhiishek.is-a.dev/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between px-2.5 py-1.5 rounded-md hover:bg-[#151719] text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors border border-transparent hover:border-[#25282C] group"
-              >
-                <span className="flex items-center gap-1.5 truncate">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                  Built by <span className="text-[#F2F3F5] font-semibold">Abhishek</span>
-                </span>
-                <ExternalLink size={11} className="text-[#6F747C] group-hover:text-[#F2F3F5] group-hover:translate-x-0.5 transition-all shrink-0 ml-1" />
-              </a>
-            </>
-          ) : (
-            <>
-              <button onClick={logout} className="w-full flex items-center justify-center p-2 rounded-md hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F87171] transition-default" title="Log out">
-                <LogOut size={16} />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-[#F2F3F5] truncate">{currentUser?.name}</p>
+                <p className="text-[10px] text-[#6F747C] capitalize">{currentUser?.role}</p>
+              </div>
+              <button onClick={logout} className="p-1 rounded hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F87171] transition-default" title="Log out">
+                <LogOut size={14} />
               </button>
-              <a
-                href="https://abhiishek.is-a.dev/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Built by Abhishek"
-                className="w-full flex items-center justify-center p-2 rounded-md hover:bg-[#151719] text-[#6F747C] hover:text-[#F2F3F5] transition-colors"
-              >
-                <ExternalLink size={14} />
-              </a>
-            </>
+            </div>
+          ) : (
+            <button onClick={logout} className="w-full flex items-center justify-center p-2 rounded-md hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F87171] transition-default" title="Log out">
+              <LogOut size={16} />
+            </button>
           )}
         </div>
       </aside>
