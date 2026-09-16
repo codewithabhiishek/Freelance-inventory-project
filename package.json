@@ -1,6 +1,9 @@
 {
-  "name": "sandbox-workspace",
+  "name": "stockflow-inventory",
+  "version": "1.0.0",
+  "description": "StockFlow - Enterprise Inventory & Billing Management System",
   "private": true,
+  "author": "Abhishek Jain <socials.abhiishek@gmail.com>",
   "type": "module",
   "scripts": {
     "dev": "vite",

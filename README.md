@@ -1,271 +1,182 @@
-# StockFlow - Inventory & Billing Management System
+# 📦 StockFlow — Enterprise Inventory & Billing Management System
 
-A professional, production-ready inventory and billing management system built with modern web technologies.
-
-## 🎨 Design & UX Improvements
-
-### Visual Polish
-- **Sophisticated Dark Theme**: Premium neutral palette with subtle gradients and glows
-- **Smooth Animations**: 20+ custom animations including fade-ins, slide-ins, scale effects, and staggered reveals
-- **Micro-interactions**: Hover effects, button press animations, smooth transitions throughout
-- **Professional Typography**: IBM Plex Sans with clear hierarchy
-- **Card Design**: Inner glows, subtle gradients, hover lift effects
-- **Status Indicators**: Animated notification dots, progress bars, and status badges
-
-### Animation System
-- **Page Transitions**: Smooth fade-in animations for all pages
-- **Staggered Reveals**: Cards and list items appear with cascading delays
-- **Chart Animations**: Animated data visualization with smooth transitions
-- **Counter Animations**: Animated number counters for KPIs
-- **Loading States**: Skeleton loaders and spinners
-- **Toast Notifications**: Slide-in animations with auto-dismiss
-- **Modal Transitions**: Scale and fade animations with backdrop blur
-- **Dropdown Menus**: Slide-down animations with border highlights
-- **Table Rows**: Staggered fade-in with hover highlights
-- **Progress Bars**: Animated fill effects
-
-### Professional Features
-- **Global Search**: Command palette with ⌘K shortcut, animated results
-- **Notification Center**: Animated notification panel with type-based icons
-- **Responsive Design**: Mobile-first with collapsible sidebar
-- **Role-based Access**: Admin, Manager, Staff permissions
-- **Data Persistence**: LocalStorage with Zustand
-- **CSV Export**: Export products, sales, expenses, and reports
-- **Print Support**: Optimized print styles for invoices
-
-## 🚀 Key Features
-
-### Dashboard
-- Real-time KPI cards with animated counters
-- Revenue trend chart with gradient fills
-- Inventory movement visualization
-- Low stock alerts with progress indicators
-- Recent sales feed
-- Top products with revenue bars
-- Profit summary with color-coded metrics
-
-### Product Management
-- Full CRUD operations
-- Advanced filtering and search
-- Sortable columns
-- Bulk selection and deletion
-- CSV export
-- Stock status indicators
-- Category management
-
-### Inventory Control
-- Real-time stock tracking
-- Automatic stock adjustments on sales/purchases
-- Manual stock adjustments with history
-- Low stock alerts
-- Inventory value tracking
-- Transaction history
-
-### Sales & Invoicing
-- Create sales with automatic stock deduction
-- Professional invoice generation
-- Automatic invoice numbering
-- Payment tracking
-- Multiple payment methods
-- Invoice status management
-- Print-ready invoices
-
-### Customer & Supplier Management
-- Complete contact management
-- Purchase history tracking
-- Outstanding balance monitoring
-- GSTIN support
-- Status management
-
-### Purchase Orders
-- Create purchase orders
-- Automatic stock increase on receipt
-- Supplier tracking
-- Order status management
-- Cost tracking
-
-### Expense Management
-- Categorized expense tracking
-- Multiple payment methods
-- Monthly summaries
-- Category breakdowns
-- CSV export
-
-### Reports & Analytics
-- Sales reports with trends
-- Revenue vs expenses charts
-- Inventory valuation reports
-- Customer analysis
-- Expense breakdowns with pie charts
-- Top products analysis
-- Profit/loss summaries
-- Date range filtering
-- CSV export
-
-### Settings
-- Company profile management
-- Invoice numbering configuration
-- Category management
-- Tax settings
-- Currency selection
-
-### User Management
-- Role-based access control
-- User activation/deactivation
-- Permission management
-
-## 🎯 Technical Stack
-
-- **React 18** with TypeScript
-- **Zustand** for state management
-- **Tailwind CSS** for styling
-- **Recharts** for data visualization
-- **Lucide React** for icons
-- **Vite** for build tooling
-
-## 🎨 Design System
-
-### Colors
-- Background: `#090A0C`
-- Surface: `#101214`
-- Elevated: `#151719`
-- Borders: `#25282C`
-- Text Primary: `#F2F3F5`
-- Text Secondary: `#9A9EA5`
-- Text Muted: `#6F747C`
-- Success: `#34D399`
-- Warning: `#FBBF24`
-- Error: `#F87171`
-- Info: `#60A5FA`
-
-### Animations
-- Fade In: `0.35s cubic-bezier(0.16, 1, 0.3, 1)`
-- Scale In: `0.3s cubic-bezier(0.16, 1, 0.3, 1)`
-- Slide Down: `0.25s cubic-bezier(0.16, 1, 0.3, 1)`
-- Stagger Delay: `50ms` increments
-
-### Components
-- Cards with inner glow effects
-- Buttons with press animations
-- Badges with semantic colors
-- Modals with backdrop blur
-- Dropdowns with border highlights
-- Tables with row highlights
-- Toasts with slide animations
-- Spinners and skeleton loaders
-
-## 📦 Getting Started
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-```
-
-## 🔐 Demo Accounts
-
-- **Admin**: arjun@stockflow.io / admin123
-- **Manager**: priya@stockflow.io / admin123
-- **Staff**: rahul@stockflow.io / admin123
-
-## 🎯 Business Logic
-
-### Inventory Consistency
-- Sales automatically decrease stock
-- Purchases increase stock when marked as received
-- Manual adjustments tracked in history
-- Low stock alerts triggered automatically
-- Out of stock notifications
-
-### Financial Calculations
-- Automatic tax calculations (GST)
-- Discount application
-- Subtotal, tax, and grand total
-- Profit tracking
-- Outstanding balance management
-- Payment reconciliation
-
-### Invoice Management
-- Automatic numbering (INV-2026-0001)
-- Payment status tracking
-- Partial payment support
-- Overdue detection
-- Print-ready format
-
-## 📱 Responsive Design
-
-- **Desktop**: Full sidebar with dashboard layout
-- **Tablet**: Collapsible sidebar
-- **Mobile**: Drawer navigation, optimized tables
-
-## 🎨 Professional Touches
-
-- Gradient backgrounds on cards
-- Subtle noise textures
-- Animated progress bars
-- Hover state transitions
-- Focus ring animations
-- Notification pulse effects
-- Chart cursor tracking
-- Smooth page transitions
-- Staggered list animations
-- Icon rotation on hover
-- Border glow effects
-- Backdrop blur on modals
-- Shadow depth variations
-
-## 🚀 Production Ready
-
-- TypeScript for type safety
-- Optimized bundle size
-- LocalStorage persistence
-- Error handling
-- Form validation
-- Empty states
-- Loading states
-- Confirmation dialogs
-- Toast notifications
-- Keyboard shortcuts
-- Print optimization
-- CSV export functionality
-
-## 📊 Sample Data
-
-Includes realistic seed data with:
-- 12 products across 6 categories
-- 8 customers with purchase history
-- 4 suppliers
-- 7 sales transactions
-- 6 invoices with various statuses
-- 4 payments
-- 4 purchase orders
-- 8 expense records
-- 8 inventory transactions
-- 6 notifications
-
-## 🎯 Key Differentiators
-
-1. **Professional Design**: Not a generic admin template - custom designed with attention to detail
-2. **Real Business Logic**: Actual inventory tracking, financial calculations, and workflow automation
-3. **Smooth Animations**: Every interaction feels polished and responsive
-4. **Complete Feature Set**: From basic CRUD to advanced reporting and analytics
-5. **Production Quality**: Type-safe, validated, error-handled, and optimized
-6. **Modern Stack**: Latest React, TypeScript, and build tools
-7. **Responsive**: Works beautifully on all device sizes
-8. **Extensible**: Clean architecture makes it easy to add features
-
-## 📝 License
-
-Built as a professional freelance project. Ready for client delivery.
+> **Client Project Showcase**  
+> Custom-built freelance enterprise web application delivered for a retail and distribution client to streamline multi-location inventory tracking, automated GST-compliant billing, supplier procurement, and financial reporting.
 
 ---
 
-**Built with ❤️ using React, TypeScript, and Tailwind CSS**
+## 🌟 Project Overview
+
+**StockFlow** is a comprehensive, production-grade inventory management and point-of-sale (POS) billing platform engineered to replace fragmented spreadsheets and legacy desktop accounting software.
+
+Built with a fast, modern web stack (**React 18**, **TypeScript**, **Tailwind CSS**, and **Zustand**), the application delivers real-time stock reconciliation, automated inventory deduction on sales, procurement lifecycle tracking, customer credit monitoring, and interactive financial analytics.
+
+### 💼 Business Problem & Solution
+- **The Challenge:** The client operated across multiple product categories with high daily transaction volumes. They struggled with stockouts, delayed reorders, manual GST billing errors, and lack of visibility into inventory valuation.
+- **The Solution:** StockFlow provides a unified, single-pane-of-glass dashboard that enforces inventory consistency across every sale, purchase, and manual adjustment, with instant invoice generation and executive-level financial reporting.
+
+---
+
+## ✨ Key Modules & Capabilities
+
+### 1. 📊 Executive Dashboard & Real-Time KPIs
+- **Live Business Metrics:** Real-time revenue counters, net profit margins, inventory valuation, and active invoice tracking.
+- **Revenue & Expense Trend Analysis:** Interactive multi-axis charts powered by Recharts with time-range filtering.
+- **Low-Stock Early Warning:** Proactive indicators highlighting items nearing or below safety reorder levels.
+- **Recent Activity Feed:** Real-time audit log of sales, procurement receipts, and stock adjustments.
+
+### 2. 🏷️ Product & Inventory Control
+- **SKU & Barcode Management:** Full catalog management with categories, units of measure, cost price, and selling price.
+- **Automated Stock Adjustments:** Inventory automatically increments when purchase orders are received and decrements when invoices are finalized.
+- **Stock Audit & History:** Complete transaction trail for every item (damage write-offs, incoming restocks, physical count audits).
+- **Bulk Operations & Export:** Fast search, multi-column sorting, and one-click CSV export for offline audits.
+
+### 3. 🧾 Sales & Smart Billing (Invoicing)
+- **Point-of-Sale Billing:** Fast checkout with item search, quantity adjustment, and line-item discount calculation.
+- **GST & Tax Compliance:** Automatic tax breakdown (CGST/SGST/IGST calculation) with customizable rates.
+- **Sequential Invoicing:** Automated, tamper-proof invoice numbering sequence (`INV-2026-XXXX`).
+- **Payment Lifecycle:** Track Paid, Partially Paid, and Overdue statuses with multiple payment modes (Cash, UPI, Card, Bank Transfer).
+- **Print & PDF Ready:** Clean print-optimized layout for immediate receipt and invoice printing.
+
+### 4. 🚚 Supplier Procurement & Purchase Orders
+- **Purchase Order Lifecycle:** Draft, Issue, Received, and Cancelled state machines.
+- **Automated Receiving:** Mark purchase orders as received to instantly increment warehouse inventory levels.
+- **Vendor Balance Tracking:** Maintain running accounts of amounts owed to suppliers with payment logging.
+
+### 5. 👥 Customer & Credit Management
+- **Customer CRM:** Contact details, delivery addresses, GSTIN validation, and lifetime purchase history.
+- **Credit & Receivables:** Monitor outstanding customer dues, credit limits, and historical invoice settlements.
+
+### 6. 📈 Financial Reporting & Analytics
+- **P&L Breakdown:** Monthly and annual revenue vs. operational expenses.
+- **Inventory Valuation Report:** Real-time calculation of total asset value based on weighted cost prices.
+- **Category Profitability:** Visual breakdown of top revenue-driving categories and high-margin SKUs.
+
+### 7. 🔐 Role-Based Access Control (RBAC)
+- **Admin:** Full access to financial settings, user permissions, tax configurations, and system data.
+- **Store Manager:** Catalog management, stock adjustments, purchase orders, and operational reports.
+- **Billing Staff:** Point-of-sale invoicing, customer management, and receipt printing.
+
+### 8. ⚡ Power-User Features
+- **Global Command Palette:** Hit `⌘K` (or `Ctrl+K`) anywhere to jump to products, customers, invoices, or quick actions.
+- **Data Persistence:** Local-first reactive state management with Zustand and local storage synchronization.
+- **Keyboard-Optimized Navigation:** Fast data entry workflows designed for busy retail cashiers.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend Framework** | React 18.2 | Component architecture & concurrent rendering |
+| **Language** | TypeScript 5.7 | Strict type safety across business data models |
+| **Styling & Design** | Tailwind CSS v4 | Custom enterprise design system & responsive layout |
+| **State Management** | Zustand 5 | Low-overhead reactive store with persistent state |
+| **Data Visualization** | Recharts 2.10 | Interactive revenue, category, and inventory charts |
+| **Icons & UI** | Lucide React | Consistent, lightweight iconography |
+| **Animation & Motion** | Framer Motion | Smooth page transitions and modal micro-interactions |
+| **Build Tooling** | Vite 6 | Lightning-fast HMR and optimized production bundle |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js**: v18.0.0 or higher
+- **npm**: v9.0.0 or higher
+
+### Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/codewithabhiishek/StockFlow-Inventory.git
+
+# 2. Navigate to the project directory
+cd StockFlow-Inventory
+
+# 3. Install dependencies
+npm install
+
+# 4. Start the local development server
+npm run dev
+```
+
+The application will be running locally at `http://localhost:5173/`.
+
+### Production Build
+
+```bash
+# Compile and build production bundle
+npm run build
+
+# Preview the production build locally
+npm run preview
+```
+
+---
+
+## 🔑 Demo Access Credentials
+
+The application includes realistic sample retail data and preconfigured role accounts for demonstration:
+
+| Role | Email | Password | Access Level |
+| :--- | :--- | :--- | :--- |
+| **Administrator** | `arjun@stockflow.io` | `admin123` | Full system access & financial controls |
+| **Store Manager** | `priya@stockflow.io` | `admin123` | Inventory, procurement & stock audits |
+| **Billing Cashier** | `rahul@stockflow.io` | `admin123` | Invoicing, POS checkout & customer records |
+
+---
+
+## 📁 Project Architecture
+
+```text
+StockFlow/
+├── public/              # Static assets & icons
+├── src/
+│   ├── components/      # Reusable UI primitives & layout shells
+│   │   ├── Layout.tsx   # Responsive sidebar navigation & top bar
+│   │   ├── ui.tsx       # Standardized buttons, inputs, badges, modals
+│   │   └── CommandPalette.tsx # Global ⌘K search overlay
+│   ├── data/            # Seed data & business model mocks
+│   │   └── seed.ts      # Default catalog, customers, and transactions
+│   ├── pages/           # Application views & route containers
+│   │   ├── Auth.tsx        # Login & credential switching
+│   │   ├── Dashboard.tsx   # KPI metric cards & sales trends
+│   │   ├── Products.tsx    # Product catalog management
+│   │   ├── Inventory.tsx   # Stock tracking & adjustment logs
+│   │   ├── Sales.tsx       # POS sales creation
+│   │   ├── Invoices.tsx    # Invoice generator & print views
+│   │   ├── Purchases.tsx   # Supplier purchase orders
+│   │   ├── Customers.tsx   # Customer credit & profile records
+│   │   ├── Suppliers.tsx   # Vendor management
+│   │   ├── Expenses.tsx    # Operational expense tracking
+│   │   ├── Reports.tsx     # Financial analytics & charts
+│   │   ├── Settings.tsx    # Tax rates & business profile
+│   │   └── Users.tsx       # Team member RBAC management
+│   ├── store/           # Zustand state management slices
+│   ├── types/           # TypeScript interfaces & domain schemas
+│   ├── index.css        # Enterprise design tokens & animations
+│   ├── App.tsx          # Application routing & context providers
+│   └── main.tsx         # Application entry point
+├── package.json         # Dependencies & project scripts
+├── tsconfig.json        # TypeScript compiler configuration
+└── vite.config.js       # Vite build configuration
+```
+
+---
+
+## 📋 Client Deliverable Notes
+
+- **Delivery Date**: September 2026
+- **Deliverable Scope**: Full-featured single-page application with mock persistence, responsive tablet/desktop UI, invoice print layouts, and reporting suite.
+- **Extensibility**: Designed with modular Zustand stores and clean separation of concerns, enabling straightforward migration to a backend database (PostgreSQL / Supabase / Express API) when needed.
+
+---
+
+## 👨‍💻 Developer & Author
+
+**Abhishek Jain**  
+- GitHub: [@codewithabhiishek](https://github.com/codewithabhiishek)  
+- Email: [socials.abhiishek@gmail.com](mailto:socials.abhiishek@gmail.com)
+
+*Built as a custom freelance client solution.*
