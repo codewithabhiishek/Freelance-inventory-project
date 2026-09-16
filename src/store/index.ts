@@ -255,17 +255,17 @@ export const useStore = create<AppState>()(
       // Invoices
       createInvoice: (invoice) => {
         const state = get();
-        state.settings.invoiceCounter += 1;
-        const invoiceNumber = `${state.settings.invoicePrefix}${String(state.settings.invoiceCounter).padStart(4, '0')}`;
+        const nextCounter = state.settings.invoiceCounter + 1;
+        const invoiceNumber = `${state.settings.invoicePrefix}${String(nextCounter).padStart(4, '0')}`;
         const newInvoice: Invoice = { ...invoice, id: uuid(), invoiceNumber, paidAmount: 0 };
         set(s => ({
           invoices: [newInvoice, ...s.invoices],
-          settings: { ...s.settings, invoiceCounter: s.settings.invoiceCounter + 1 }
+          settings: { ...s.settings, invoiceCounter: nextCounter }
         }));
         // Add notification
         get().addNotification({
-          type: 'overdue_invoice',
-          title: 'New Invoice Created',
+          type: 'invoice_created',
+          title: 'Invoice Created',
           message: `${invoiceNumber} created for ${invoice.customerName}`,
         });
         return invoiceNumber;
@@ -303,12 +303,12 @@ export const useStore = create<AppState>()(
       // Purchases
       createPurchase: (purchase) => {
         const state = get();
-        state.settings.purchaseCounter += 1;
-        const purchaseNumber = `${state.settings.purchasePrefix}${String(state.settings.purchaseCounter).padStart(4, '0')}`;
+        const nextCounter = state.settings.purchaseCounter + 1;
+        const purchaseNumber = `${state.settings.purchasePrefix}${String(nextCounter).padStart(4, '0')}`;
         const newPurchase: Purchase = { ...purchase, id: uuid(), purchaseNumber };
         set(s => ({
           purchases: [newPurchase, ...s.purchases],
-          settings: { ...s.settings, purchaseCounter: s.settings.purchaseCounter + 1 }
+          settings: { ...s.settings, purchaseCounter: nextCounter }
         }));
         return purchaseNumber;
       },

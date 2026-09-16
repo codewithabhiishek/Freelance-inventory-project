@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useStore } from '../store';
 import { Button, Input, Select, Badge, Modal, SearchInput, Pagination, formatCurrency, formatDate, Dropdown, Metric } from '../components/ui';
-import { Plus, MoreHorizontal, Eye } from 'lucide-react';
+import { Plus, MoreHorizontal, Eye, Check, Printer } from 'lucide-react';
 import { InvoiceItem } from '../types';
 
 export function Invoices() {
@@ -81,7 +81,7 @@ export function Invoices() {
                     <Dropdown trigger={<button className="p-1 rounded hover:bg-[#1C1C1F] text-[#6B6B76]"><MoreHorizontal size={13} /></button>}
                       items={[
                         { label: 'View', icon: <Eye size={12} />, onClick: () => setViewInvoice(inv.id) },
-                        ...(inv.status !== 'paid' && inv.status !== 'cancelled' ? [{ label: 'Mark paid', icon: <Eye size={12} />, onClick: () => { updateInvoiceStatus(inv.id, 'paid'); setToast('Invoice marked as paid'); setTimeout(() => setToast(''), 3000); } }] : []),
+                        ...(inv.status !== 'paid' && inv.status !== 'cancelled' ? [{ label: 'Mark paid', icon: <Check size={12} />, onClick: () => { updateInvoiceStatus(inv.id, 'paid'); setToast('Invoice marked as paid'); setTimeout(() => setToast(''), 3000); } }] : []),
                       ]} />
                   </td>
                 </tr>
@@ -95,6 +95,7 @@ export function Invoices() {
       {invoice && (
         <Modal open={true} onClose={() => setViewInvoice(null)} title={`Invoice ${invoice.invoiceNumber}`} size="lg" footer={
           <div className="flex gap-2">
+            <Button size="sm" variant="secondary" onClick={() => window.print()}><Printer size={12} /> Print</Button>
             {invoice.status !== 'paid' && invoice.status !== 'cancelled' && (
               <Button size="sm" onClick={() => { updateInvoiceStatus(invoice.id, 'paid'); setViewInvoice(null); setToast('Invoice marked as paid'); setTimeout(() => setToast(''), 3000); }}>Mark as paid</Button>
             )}

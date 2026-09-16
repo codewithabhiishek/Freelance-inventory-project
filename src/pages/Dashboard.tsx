@@ -16,10 +16,11 @@ export function Dashboard() {
   const inventoryValue = products.reduce((sum, p) => sum + (p.stock * p.costPrice), 0);
   const outstandingPayments = invoices.reduce((sum, i) => sum + (i.total - i.paidAmount), 0);
   const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
-  const profit = totalRevenue - products.reduce((sum, p) => {
+  const cogs = products.reduce((sum, p) => {
     const soldItems = sales.flatMap(s => s.items.filter(i => i.productId === p.id));
     return sum + soldItems.reduce((s, i) => s + (i.quantity * p.costPrice), 0);
-  }, 0) - totalExpenses;
+  }, 0);
+  const profit = totalRevenue - cogs - totalExpenses;
 
   // Revenue chart data (last 7 days simulated)
   const revenueData = [
@@ -199,7 +200,7 @@ export function Dashboard() {
           </div>
           <div>
             <p className="text-[10px] text-[#6F747C] uppercase tracking-wide">COGS</p>
-            <p className="text-sm font-semibold text-[#F2F3F5] mt-1">{formatCurrency(totalRevenue - profit - totalExpenses > 0 ? totalRevenue - profit - totalExpenses : 0)}</p>
+            <p className="text-sm font-semibold text-[#F2F3F5] mt-1">{formatCurrency(cogs)}</p>
           </div>
           <div>
             <p className="text-[10px] text-[#6F747C] uppercase tracking-wide">Net Profit</p>

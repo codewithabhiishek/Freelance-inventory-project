@@ -90,13 +90,36 @@ function CreateSaleModal({ onClose, products, customers, createSale, onSuccess }
     const product = products.find((p: any) => p.id === selectedProduct);
     if (!product) return;
     const quantity = parseInt(qty) || 1;
-    if (quantity > product.stock) { setError(`Only ${product.stock} available`); return; }
-    const subtotal = product.sellingPrice * quantity;
-    const itemDiscount = parseFloat(discount) || 0;
-    const afterDiscount = subtotal * (1 - itemDiscount / 100);
-    const tax = afterDiscount * (product.taxRate / 100);
-    const total = afterDiscount + tax;
-    setItems([...items, { productId: product.id, productName: product.name, quantity, unitPrice: product.sellingPrice, discount: itemDiscount, taxRate: product.taxRate, total }]);
+    if (quantity <= 0) { setError('Quantity must be at least 1'); return; }
+    const existingIndex = items.findIndex(i => i.productId === product.id);
+    const existingQty = existingIndex >= 0 ? items[existingIndex].quantity : 0;
+    const totalQty = existingQty + quantity;
+    if (totalQty > product.stock) {
+      setError(`Only ${product.stock} available${existingQty > 0 ? ` (${existingQty} already in cart)` : ''}`);
+      return;
+    }
+
+    const itemDiscount = Math.min(100, Math.max(0, parseFloat(discount) || 0));
+    if (existingIndex >= 0) {
+      const subtotal = product.sellingPrice * totalQty;
+      const afterDiscount = subtotal * (1 - itemDiscount / 100);
+      const tax = afterDiscount * (product.taxRate / 100);
+      const total = afterDiscount + tax;
+      const updated = [...items];
+      updated[existingIndex] = {
+        ...updated[existingIndex],
+        quantity: totalQty,
+        discount: itemDiscount,
+        total,
+      };
+      setItems(updated);
+    } else {
+      const subtotal = product.sellingPrice * quantity;
+      const afterDiscount = subtotal * (1 - itemDiscount / 100);
+      const tax = afterDiscount * (product.taxRate / 100);
+      const total = afterDiscount + tax;
+      setItems([...items, { productId: product.id, productName: product.name, quantity, unitPrice: product.sellingPrice, discount: itemDiscount, taxRate: product.taxRate, total }]);
+    }
     setSelectedProduct(''); setQty('1'); setDiscount('0'); setError('');
   };
 

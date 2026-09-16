@@ -179,7 +179,7 @@ export interface InventoryTransaction {
 
 export interface Notification {
   id: string;
-  type: 'low_stock' | 'out_of_stock' | 'overdue_invoice' | 'payment_received' | 'purchase_received' | 'error';
+  type: 'low_stock' | 'out_of_stock' | 'overdue_invoice' | 'payment_received' | 'purchase_received' | 'invoice_created' | 'error';
   title: string;
   message: string;
   read: boolean;

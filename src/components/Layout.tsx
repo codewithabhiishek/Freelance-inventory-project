@@ -347,7 +347,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                             }`}>
                               {n.type === 'low_stock' ? <PackageIcon size={14} /> :
                                n.type === 'out_of_stock' ? <PackageIcon size={14} /> :
-                               n.type === 'overdue_invoice' ? <FileText size={14} /> :
+                               n.type === 'overdue_invoice' || n.type === 'invoice_created' ? <FileText size={14} /> :
                                n.type === 'payment_received' ? <CreditCard size={14} /> :
                                <Bell size={14} />}
                             </div>
