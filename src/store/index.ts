@@ -90,6 +90,8 @@ interface AppState {
   // Notifications
   markNotificationRead: (id: string) => void;
   markAllNotificationsRead: () => void;
+  deleteNotification: (id: string) => void;
+  clearAllNotifications: () => void;
   addNotification: (notification: Omit<Notification, 'id' | 'date' | 'read'>) => void;
 
   // Settings
@@ -429,6 +431,12 @@ export const useStore = create<AppState>()(
       },
       markAllNotificationsRead: () => {
         set(s => ({ notifications: s.notifications.map(n => ({ ...n, read: true })) }));
+      },
+      deleteNotification: (id) => {
+        set(s => ({ notifications: s.notifications.filter(n => n.id !== id) }));
+      },
+      clearAllNotifications: () => {
+        set({ notifications: [] });
       },
       addNotification: (notification) => {
         set(s => ({

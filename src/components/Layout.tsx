@@ -4,7 +4,8 @@ import { PageKey } from '../types';
 import {
   LayoutDashboard, Package, Warehouse, ShoppingCart, Truck, Users, Building2,
   FileText, CreditCard, Receipt, BarChart3, UserCog, Settings, Search, Bell,
-  Plus, LogOut, Menu, Command, ArrowRight, Sun, Moon, Keyboard, X, Check, Package as PackageIcon
+  Plus, LogOut, Menu, Command, ArrowRight, Sun, Moon, Keyboard, X, Check, Package as PackageIcon,
+  Trash2, Filter, RefreshCw
 } from 'lucide-react';
 import { Button, Badge, formatCurrency } from './ui';
 
@@ -150,13 +151,225 @@ function ShortcutsModal({ open, onClose }: { open: boolean; onClose: () => void 
   );
 }
 
+// Full Notifications Center Modal
+export function NotificationsModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { notifications, markNotificationRead, markAllNotificationsRead, clearAllNotifications, deleteNotification, setCurrentPage } = useStore();
+  const [filter, setFilter] = useState<'all' | 'unread' | 'stock' | 'invoice'>('all');
+  const [query, setQuery] = useState('');
+
+  if (!open) return null;
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const filtered = notifications.filter(n => {
+    if (filter === 'unread' && n.read) return false;
+    if (filter === 'stock' && n.type !== 'low_stock' && n.type !== 'out_of_stock') return false;
+    if (filter === 'invoice' && n.type !== 'overdue_invoice' && n.type !== 'invoice_created' && n.type !== 'payment_received') return false;
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      return n.title.toLowerCase().includes(q) || n.message.toLowerCase().includes(q) || n.date.toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/70 modal-backdrop animate-fade-in" onClick={onClose} />
+      <div className="relative w-full max-w-xl bg-[#101214] border border-[#25282C] rounded-2xl shadow-2xl shadow-black/50 animate-fade-in-scale inner-glow overflow-hidden flex flex-col max-h-[85vh]">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[#25282C] bg-[#0C0D0F]/80 backdrop-blur-sm">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-[#151719] border border-[#25282C] flex items-center justify-center">
+              <Bell size={15} className="text-[#60A5FA]" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-semibold text-[#F2F3F5]">Notifications Center</h2>
+                {unreadCount > 0 && (
+                  <span className="text-[11px] font-bold text-white bg-[#F87171] px-2 py-0.5 rounded-full">
+                    {unreadCount} unread
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-[#6F747C]">System alerts, stock warnings, and invoice updates</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-md hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all hover:rotate-90">
+            <X size={16} />
+          </button>
+        </div>
+
+        {/* Toolbar: Search + Filter Tabs */}
+        <div className="px-5 py-3 border-b border-[#1E2024] bg-[#0E1012] space-y-2.5">
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6F747C]" />
+              <input
+                type="text"
+                placeholder="Search notifications..."
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                className="w-full pl-8 pr-3 py-1.5 text-xs bg-[#151719] border border-[#25282C] rounded-lg text-[#F2F3F5] placeholder-[#495057] focus:outline-none focus:border-[#3B82F6] transition-colors"
+              />
+              {query && (
+                <button onClick={() => setQuery('')} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#6F747C] hover:text-[#F2F3F5]">
+                  <X size={12} />
+                </button>
+              )}
+            </div>
+            {unreadCount > 0 && (
+              <button
+                onClick={markAllNotificationsRead}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-[#60A5FA] hover:bg-[#1E293B]/40 rounded-lg transition-colors whitespace-nowrap btn-press"
+              >
+                <Check size={12} /> Mark all read
+              </button>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1 overflow-x-auto pb-0.5">
+            {[
+              { key: 'all', label: 'All', count: notifications.length },
+              { key: 'unread', label: 'Unread', count: unreadCount },
+              { key: 'stock', label: 'Stock Alerts' },
+              { key: 'invoice', label: 'Invoices & Payments' },
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setFilter(tab.key as any)}
+                className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all whitespace-nowrap ${
+                  filter === tab.key
+                    ? 'bg-[#1A1C1F] text-[#F2F3F5] border border-[#25282C]'
+                    : 'text-[#6F747C] hover:text-[#F2F3F5] hover:bg-[#151719]'
+                }`}
+              >
+                {tab.label} {tab.count !== undefined && tab.count > 0 ? `(${tab.count})` : ''}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Notifications List */}
+        <div className="flex-1 overflow-y-auto divide-y divide-[#1E2024]">
+          {filtered.length === 0 ? (
+            <div className="py-16 text-center px-4">
+              <div className="w-12 h-12 rounded-full bg-[#151719] border border-[#25282C] flex items-center justify-center mx-auto mb-3">
+                <Bell size={20} className="text-[#6F747C]" />
+              </div>
+              <p className="text-sm font-medium text-[#F2F3F5]">No notifications found</p>
+              <p className="text-xs text-[#6F747C] mt-1">
+                {query ? 'Try changing your search terms or filter.' : 'All caught up! No notifications to display.'}
+              </p>
+            </div>
+          ) : (
+            filtered.map(n => (
+              <div
+                key={n.id}
+                className={`p-4 flex items-start gap-3 hover:bg-[#151719]/60 transition-colors ${
+                  !n.read ? 'bg-[#0D0E10]' : ''
+                }`}
+              >
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                  n.type === 'low_stock' || n.type === 'out_of_stock'
+                    ? 'bg-[#F87171]/10 text-[#F87171]'
+                    : n.type === 'payment_received'
+                    ? 'bg-[#34D399]/10 text-[#34D399]'
+                    : 'bg-[#60A5FA]/10 text-[#60A5FA]'
+                }`}>
+                  {n.type === 'low_stock' || n.type === 'out_of_stock' ? <PackageIcon size={14} /> :
+                   n.type === 'payment_received' ? <CreditCard size={14} /> :
+                   n.type === 'overdue_invoice' || n.type === 'invoice_created' ? <FileText size={14} /> :
+                   <Bell size={14} />}
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <p className={`text-xs font-semibold ${!n.read ? 'text-[#F2F3F5]' : 'text-[#9A9EA5]'}`}>{n.title}</p>
+                      {!n.read && <span className="w-2 h-2 rounded-full bg-[#60A5FA] shrink-0" />}
+                    </div>
+                    <span className="text-[10px] text-[#495057] shrink-0">{n.date}</span>
+                  </div>
+                  <p className="text-xs text-[#6F747C] mt-0.5 leading-relaxed">{n.message}</p>
+                  <div className="flex items-center gap-3 mt-2">
+                    {!n.read && (
+                      <button
+                        onClick={() => markNotificationRead(n.id)}
+                        className="text-[11px] text-[#60A5FA] hover:underline"
+                      >
+                        Mark as read
+                      </button>
+                    )}
+                    {(n.type === 'low_stock' || n.type === 'out_of_stock') && (
+                      <button
+                        onClick={() => { onClose(); setCurrentPage('inventory'); }}
+                        className="text-[11px] text-[#FBBF24] hover:underline flex items-center gap-1"
+                      >
+                        Go to Inventory →
+                      </button>
+                    )}
+                    {(n.type === 'overdue_invoice' || n.type === 'invoice_created') && (
+                      <button
+                        onClick={() => { onClose(); setCurrentPage('invoices'); }}
+                        className="text-[11px] text-[#60A5FA] hover:underline flex items-center gap-1"
+                      >
+                        View Invoices →
+                      </button>
+                    )}
+                    <button
+                      onClick={() => deleteNotification(n.id)}
+                      className="text-[11px] text-[#6F747C] hover:text-[#F87171] ml-auto flex items-center gap-1"
+                      title="Delete notification"
+                    >
+                      <Trash2 size={11} /> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="px-5 py-3 border-t border-[#25282C] bg-[#0C0D0F]/80 flex items-center justify-between">
+          <span className="text-xs text-[#6F747C]">
+            {filtered.length} notification{filtered.length === 1 ? '' : 's'}
+          </span>
+          <div className="flex items-center gap-2">
+            {notifications.length > 0 && (
+              <button
+                onClick={clearAllNotifications}
+                className="text-xs text-[#6F747C] hover:text-[#F87171] transition-colors font-medium px-2 py-1 rounded"
+              >
+                Clear all
+              </button>
+            )}
+            <Button size="sm" variant="secondary" onClick={onClose}>
+              Done
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const { currentPage, setCurrentPage, sidebarCollapsed, toggleSidebar, currentUser, logout, notifications, settings, theme, toggleTheme, shortcutsOpen, setShortcutsOpen } = useStore();
   const [searchOpen, setSearchOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const [allNotifOpen, setAllNotifOpen] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 450);
+  };
 
   // Close notification panel on outside click
   useEffect(() => {
@@ -176,7 +389,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT';
       
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setSearchOpen(o => !o); }
-      if (e.key === 'Escape') { setSearchOpen(false); setNotifOpen(false); setShortcutsOpen(false); }
+      if (e.key === 'Escape') { setSearchOpen(false); setNotifOpen(false); setShortcutsOpen(false); setAllNotifOpen(false); }
       
       if (!isInput && !searchOpen && !notifOpen && !shortcutsOpen) {
         if (e.key === '?') { e.preventDefault(); setShortcutsOpen(true); }
@@ -366,8 +579,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   </div>
                   {notifications.length > 0 && (
                     <div className="flex-shrink-0 px-4 py-2.5 border-t border-[#25282C] bg-[#0C0D0F]/50">
-                      <button onClick={() => { setNotifOpen(false); }} className="w-full text-center text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors font-medium btn-press py-1">
-                        View all notifications
+                      <button onClick={() => { setNotifOpen(false); setAllNotifOpen(true); }} className="w-full text-center text-[11px] text-[#60A5FA] hover:text-[#93C5FD] transition-colors font-medium btn-press py-1 flex items-center justify-center gap-1.5">
+                        View all notifications ({notifications.length}) →
                       </button>
                     </div>
                   )}
@@ -375,6 +588,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
               </>
             )}
           </div>
+
+          {/* Refresh button */}
+          <button onClick={handleRefresh}
+            className={`p-2 rounded-lg hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200 btn-press group ${isRefreshing ? 'animate-spin text-[#60A5FA]' : ''}`}
+            title="Refresh data">
+            <RefreshCw size={15} />
+          </button>
 
           {/* Shortcuts hint */}
           <button onClick={() => setShortcutsOpen(true)}
@@ -407,6 +627,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
       <ShortcutsModal open={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
+      <NotificationsModal open={allNotifOpen} onClose={() => setAllNotifOpen(false)} />
     </div>
   );
 }

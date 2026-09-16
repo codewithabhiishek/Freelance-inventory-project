@@ -278,9 +278,139 @@ export function Metric({ label, value, hint, trend }: {
   );
 }
 
-// Skeleton
+// Shimmer Skeleton
 export function Skeleton({ className = '' }: { className?: string }) {
-  return <div className={`bg-[#151719] rounded animate-pulse ${className}`} />;
+  return <div className={`skeleton-shimmer rounded-md border border-[#25282C]/30 ${className}`} />;
+}
+
+// Prebuilt Stat Card Skeleton
+export function CardSkeleton() {
+  return (
+    <div className="bg-[#101214] border border-[#25282C] rounded-xl p-4 space-y-3">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-3 w-24" />
+        <Skeleton className="h-7 w-7 rounded-md" />
+      </div>
+      <Skeleton className="h-7 w-32" />
+      <Skeleton className="h-4 w-20 rounded-full" />
+    </div>
+  );
+}
+
+// Prebuilt Table Skeleton
+export function TableSkeleton({ rows = 6, cols = 5 }: { rows?: number; cols?: number }) {
+  return (
+    <div className="bg-[#101214] border border-[#25282C] rounded-xl overflow-hidden">
+      <div className="px-4 py-3 border-b border-[#1E2024] flex items-center justify-between">
+        <Skeleton className="h-4 w-32" />
+        <div className="flex items-center gap-2">
+          <Skeleton className="h-8 w-44 rounded-lg" />
+          <Skeleton className="h-8 w-24 rounded-lg" />
+        </div>
+      </div>
+      <div className="p-4 space-y-3.5">
+        <div className="grid grid-cols-5 gap-4 pb-2 border-b border-[#1E2024]/60">
+          {Array.from({ length: cols }).map((_, i) => (
+            <Skeleton key={i} className="h-3 w-full max-w-[90px]" />
+          ))}
+        </div>
+        {Array.from({ length: rows }).map((_, r) => (
+          <div key={r} className="grid grid-cols-5 gap-4 items-center py-1">
+            <Skeleton className="h-4 w-4/5" />
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/3 ml-auto" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Prebuilt Dashboard Skeleton
+export function DashboardSkeleton() {
+  return (
+    <div className="p-4 lg:p-6 space-y-6">
+      {/* Header */}
+      <div className="space-y-2">
+        <Skeleton className="h-6 w-36" />
+        <Skeleton className="h-3.5 w-64" />
+      </div>
+      {/* 4 Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <CardSkeleton />
+        <CardSkeleton />
+        <CardSkeleton />
+        <CardSkeleton />
+      </div>
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <div className="lg:col-span-2 bg-[#101214] border border-[#25282C] rounded-xl p-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-3 w-20" />
+          </div>
+          <Skeleton className="h-[240px] w-full rounded-lg" />
+        </div>
+        <div className="bg-[#101214] border border-[#25282C] rounded-xl p-4 space-y-4">
+          <Skeleton className="h-4 w-28" />
+          <Skeleton className="h-[240px] w-full rounded-lg" />
+        </div>
+      </div>
+      {/* Bottom Lists */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <div className="bg-[#101214] border border-[#25282C] rounded-xl p-4 space-y-3">
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+        </div>
+        <div className="bg-[#101214] border border-[#25282C] rounded-xl p-4 space-y-3">
+          <Skeleton className="h-4 w-28 mb-2" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+        </div>
+        <div className="bg-[#101214] border border-[#25282C] rounded-xl p-4 space-y-3">
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+          <Skeleton className="h-10 w-full rounded-lg" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Prebuilt Generic Page Skeleton for Tables & Lists
+export function PageSkeleton({ title = 'Loading...' }: { title?: string }) {
+  return (
+    <div className="p-4 lg:p-6 space-y-5">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1.5">
+          <Skeleton className="h-6 w-40" />
+          <Skeleton className="h-3.5 w-60" />
+        </div>
+        <Skeleton className="h-9 w-28 rounded-lg" />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="bg-[#101214] border border-[#25282C] rounded-xl p-3.5 space-y-2">
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-6 w-28" />
+        </div>
+        <div className="bg-[#101214] border border-[#25282C] rounded-xl p-3.5 space-y-2">
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-6 w-28" />
+        </div>
+        <div className="bg-[#101214] border border-[#25282C] rounded-xl p-3.5 space-y-2">
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-6 w-28" />
+        </div>
+      </div>
+      <TableSkeleton rows={7} cols={5} />
+    </div>
+  );
 }
 
 // Format currency

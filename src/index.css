@@ -164,9 +164,13 @@ body {
 
 /* Shimmer skeleton */
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #151719 25%, #1A1C1F 50%, #151719 75%);
+  background: linear-gradient(90deg, #151719 25%, #23262B 50%, #151719 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+.light .skeleton-shimmer {
+  background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
+  background-size: 200% 100%;
 }
 
 /* Glow effects */

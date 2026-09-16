@@ -15,9 +15,11 @@ import { Reports } from './pages/Reports';
 import { Settings } from './pages/Settings';
 import { Users } from './pages/Users';
 import { Auth } from './pages/Auth';
+import { DashboardSkeleton, PageSkeleton } from './components/ui';
 
 function App() {
   const { isAuthenticated, currentPage, theme } = useStore();
+  const [isPageLoading, setIsPageLoading] = React.useState(true);
 
   // Apply theme to document
   useEffect(() => {
@@ -30,11 +32,25 @@ function App() {
     }
   }, [theme]);
 
+  // Smooth skeleton transition on route changes
+  useEffect(() => {
+    setIsPageLoading(true);
+    const timer = setTimeout(() => setIsPageLoading(false), 240);
+    return () => clearTimeout(timer);
+  }, [currentPage]);
+
   if (!isAuthenticated) {
     return <Auth />;
   }
 
   const renderPage = () => {
+    if (isPageLoading) {
+      if (currentPage === 'dashboard') {
+        return <DashboardSkeleton />;
+      }
+      return <PageSkeleton />;
+    }
+
     switch (currentPage) {
       case 'dashboard': return <Dashboard />;
       case 'products': return <Products />;
