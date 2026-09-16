@@ -298,8 +298,16 @@ button:focus-visible {
 }
 
 /* Subtle inner glow for cards */
-.inner-glow {
+.inner-glow:not(.absolute):not(.fixed) {
   position: relative;
+}
+.inner-glow.absolute,
+.inner-glow.\!absolute {
+  position: absolute !important;
+}
+.inner-glow.fixed,
+.inner-glow.\!fixed {
+  position: fixed !important;
 }
 .inner-glow::before {
   content: '';

@@ -181,7 +181,7 @@ export function Dropdown({ trigger, items, align = 'right' }: {
     <div className="relative" ref={ref}>
       <div onClick={() => setOpen(!open)}>{trigger}</div>
       {open && (
-        <div className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} mt-1.5 min-w-[160px] bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/30 py-1.5 z-50 animate-slide-down inner-glow overflow-hidden`}>
+        <div className={`!absolute top-full ${align === 'right' ? 'right-0' : 'left-0'} mt-1.5 min-w-[160px] bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/30 py-1.5 z-50 animate-slide-down inner-glow overflow-hidden`}>
           {items.map((item, i) => (
             <button key={i} onClick={() => { item.onClick(); setOpen(false); }}
               className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2.5 transition-all duration-150 border-l-2 border-transparent hover:border-l-[#F2F3F5] ${item.danger ? 'text-[#F87171] hover:bg-[#1A1C1F]' : 'text-[#9A9EA5] hover:text-[#F2F3F5] hover:bg-[#1A1C1F]'}`}>

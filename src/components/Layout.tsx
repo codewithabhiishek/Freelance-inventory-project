@@ -313,8 +313,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <div className="fixed inset-0 z-[45] bg-black/20 animate-fade-in" onClick={() => setNotifOpen(false)} />
                 
                 {/* Notification Panel */}
-                <div className="absolute right-0 top-full mt-2 w-80 bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/30 z-50 animate-slide-down inner-glow overflow-hidden">
-                  <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#25282C] bg-[#0C0D0F]/50">
+                <div className="!absolute right-0 top-full mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] bg-[#101214] border border-[#25282C] rounded-xl shadow-2xl shadow-black/40 z-50 animate-slide-down inner-glow overflow-hidden flex flex-col max-h-[min(520px,calc(100vh-80px))]">
+                  <div className="flex-shrink-0 flex items-center justify-between px-4 py-3.5 border-b border-[#25282C] bg-[#0C0D0F]/80 backdrop-blur-sm">
                     <div className="flex items-center gap-2">
                       <Bell size={14} className="text-[#9A9EA5]" />
                       <span className="text-sm font-semibold text-[#F2F3F5]">Notifications</span>
@@ -324,7 +324,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                       <Check size={11} /> Mark all read
                     </button>
                   </div>
-                  <div className="max-h-[60vh] overflow-y-auto">
+                  <div className="flex-1 overflow-y-auto">
                     {notifications.length === 0 ? (
                       <div className="px-4 py-12 text-center">
                         <div className="w-12 h-12 rounded-full bg-[#151719] border border-[#25282C] flex items-center justify-center mx-auto mb-3">
@@ -365,7 +365,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     )}
                   </div>
                   {notifications.length > 0 && (
-                    <div className="px-4 py-2.5 border-t border-[#25282C] bg-[#0C0D0F]/30">
+                    <div className="flex-shrink-0 px-4 py-2.5 border-t border-[#25282C] bg-[#0C0D0F]/50">
                       <button onClick={() => { setNotifOpen(false); }} className="w-full text-center text-[11px] text-[#6F747C] hover:text-[#F2F3F5] transition-colors font-medium btn-press py-1">
                         View all notifications
                       </button>
