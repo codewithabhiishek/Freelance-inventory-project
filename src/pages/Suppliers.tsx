@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useStore } from '../store';
 import { Supplier } from '../types';
 import { Button, Input, Badge, Modal, ConfirmDialog, SearchInput, Pagination, formatCurrency, Dropdown } from '../components/ui';
-import { Plus, MoreHorizontal, Edit2, Trash2, Building2 } from 'lucide-react';
+import { Plus, MoreHorizontal, Edit2, Trash2 } from 'lucide-react';
 
 export function Suppliers() {
   const { suppliers, addSupplier, updateSupplier, deleteSupplier } = useStore();
@@ -12,7 +12,7 @@ export function Suppliers() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [toast, setToast] = useState('');
-  const perPage = 10;
+  const perPage = 15;
 
   const filtered = useMemo(() => {
     let result = [...suppliers];
@@ -24,57 +24,45 @@ export function Suppliers() {
   const paginated = filtered.slice((page - 1) * perPage, page * perPage);
 
   return (
-    <div className="p-4 lg:p-6 space-y-4 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="p-6 lg:p-8 animate-fade-in">
+      <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-lg font-semibold text-[#F2F3F5]">Suppliers</h1>
-          <p className="text-sm text-[#6F747C]">{suppliers.length} suppliers</p>
+          <h1 className="text-[20px] font-semibold text-[#EFEFF1] tracking-tight">Suppliers</h1>
+          <p className="text-[13px] text-[#6B6B76] mt-0.5">{suppliers.length} suppliers</p>
         </div>
-        <Button size="sm" onClick={() => { setEditing(null); setShowForm(true); }}><Plus size={13} /> Add Supplier</Button>
+        <Button size="sm" onClick={() => { setEditing(null); setShowForm(true); }}><Plus size={12} /> Add supplier</Button>
       </div>
 
-      <SearchInput value={search} onChange={v => { setSearch(v); setPage(1); }} placeholder="Search suppliers..." className="w-full sm:w-64" />
+      <SearchInput value={search} onChange={v => { setSearch(v); setPage(1); }} placeholder="Search suppliers..." className="w-64 mb-4" />
 
-      <div className="bg-[#101214] border border-[#25282C] rounded-lg overflow-hidden">
+      <div className="border border-[#1A1A1D] rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-[13px]">
             <thead>
-              <tr className="border-b border-[#25282C]">
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Company</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Contact</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Email</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Phone</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Total Purchases</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Payable</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Status</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Actions</th>
+              <tr className="border-b border-[#1A1A1D]">
+                <th className="px-3 py-2.5 text-left text-[11px] font-medium text-[#6B6B76]">Company</th>
+                <th className="px-3 py-2.5 text-left text-[11px] font-medium text-[#6B6B76]">Contact</th>
+                <th className="px-3 py-2.5 text-left text-[11px] font-medium text-[#6B6B76]">Email</th>
+                <th className="px-3 py-2.5 text-right text-[11px] font-medium text-[#6B6B76]">Purchases</th>
+                <th className="px-3 py-2.5 text-right text-[11px] font-medium text-[#6B6B76]">Payable</th>
+                <th className="px-3 py-2.5 text-left text-[11px] font-medium text-[#6B6B76]">Status</th>
+                <th className="px-3 py-2.5 w-8"></th>
               </tr>
             </thead>
             <tbody>
               {paginated.map(s => (
-                <tr key={s.id} className="border-b border-[#1E2024] hover:bg-[#0D0E10] transition-default">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded bg-[#1A1C1F] border border-[#25282C] flex items-center justify-center"><Building2 size={12} className="text-[#6F747C]" /></div>
-                      <div>
-                        <p className="font-medium text-[#F2F3F5]">{s.company}</p>
-                        <p className="text-[10px] text-[#6F747C]">{s.productsSupplied.length} products</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-[#9A9EA5]">{s.name}</td>
-                  <td className="px-4 py-3 text-[#9A9EA5] text-xs">{s.email}</td>
-                  <td className="px-4 py-3 text-[#9A9EA5] text-xs">{s.phone}</td>
-                  <td className="px-4 py-3 text-right text-[#F2F3F5]">{formatCurrency(s.totalPurchases)}</td>
-                  <td className="px-4 py-3 text-right">
-                    <span className={s.outstandingPayable > 0 ? 'text-[#FBBF24]' : 'text-[#6F747C]'}>{formatCurrency(s.outstandingPayable)}</span>
-                  </td>
-                  <td className="px-4 py-3"><Badge variant={s.status === 'active' ? 'success' : 'neutral'}>{s.status}</Badge></td>
-                  <td className="px-4 py-3 text-right">
-                    <Dropdown trigger={<button className="p-1 rounded hover:bg-[#1A1C1F] text-[#6F747C]"><MoreHorizontal size={14} /></button>}
+                <tr key={s.id} className="border-b border-[#1A1A1D] last:border-0 hover:bg-[#111113] transition-colors">
+                  <td className="px-3 py-2 text-[#EFEFF1] font-medium">{s.company}</td>
+                  <td className="px-3 py-2 text-[#A1A1AA]">{s.name}</td>
+                  <td className="px-3 py-2 text-[#6B6B76] text-[12px]">{s.email}</td>
+                  <td className="px-3 py-2 text-right text-[#EFEFF1] tabular-nums">{formatCurrency(s.totalPurchases)}</td>
+                  <td className="px-3 py-2 text-right tabular-nums"><span className={s.outstandingPayable > 0 ? 'text-[#FBBF24]' : 'text-[#6B6B76]'}>{formatCurrency(s.outstandingPayable)}</span></td>
+                  <td className="px-3 py-2"><Badge variant={s.status === 'active' ? 'success' : 'neutral'}>{s.status}</Badge></td>
+                  <td className="px-3 py-2 text-right">
+                    <Dropdown trigger={<button className="p-1 rounded hover:bg-[#1C1C1F] text-[#6B6B76]"><MoreHorizontal size={13} /></button>}
                       items={[
-                        { label: 'Edit', icon: <Edit2 size={13} />, onClick: () => { setEditing(s); setShowForm(true); } },
-                        { label: 'Delete', icon: <Trash2 size={13} />, onClick: () => setDeleteId(s.id), danger: true },
+                        { label: 'Edit', icon: <Edit2 size={12} />, onClick: () => { setEditing(s); setShowForm(true); } },
+                        { label: 'Delete', icon: <Trash2 size={12} />, onClick: () => setDeleteId(s.id), danger: true },
                       ]} />
                   </td>
                 </tr>
@@ -85,15 +73,15 @@ export function Suppliers() {
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
 
-      {showForm && <SupplierForm supplier={editing} onClose={() => setShowForm(false)} onSave={(data) => {
+      {showForm && <SupplierForm supplier={editing} onClose={() => setShowForm(false)} onSave={(data: any) => {
         if (editing) { updateSupplier(editing.id, data); setToast('Supplier updated'); }
-        else { addSupplier(data as any); setToast('Supplier created'); }
+        else { addSupplier(data); setToast('Supplier created'); }
         setShowForm(false); setTimeout(() => setToast(''), 3000);
       }} />}
 
       <ConfirmDialog open={!!deleteId} onClose={() => setDeleteId(null)} onConfirm={() => { if (deleteId) { deleteSupplier(deleteId); setToast('Supplier deleted'); setTimeout(() => setToast(''), 3000); } }}
-        title="Delete Supplier" message="Are you sure? This will remove the supplier record." confirmText="Delete" danger />
-      {toast && <div className="fixed bottom-4 right-4 z-[100] px-4 py-3 rounded-lg border border-[#064E2B] bg-[#052E16] animate-fade-in"><span className="text-sm font-medium text-[#34D399]">{toast}</span></div>}
+        title="Delete supplier" message="This will remove the supplier record." confirmText="Delete" danger />
+      {toast && <div className="fixed bottom-4 right-4 z-[100] px-3 py-2 rounded-md bg-[#161618] border border-[#242428] animate-toast"><span className="text-[12px] font-medium text-[#4ADE80]">{toast}</span></div>}
     </div>
   );
 }
@@ -118,21 +106,19 @@ function SupplierForm({ supplier, onClose, onSave }: { supplier: Supplier | null
   };
 
   return (
-    <Modal open={true} onClose={onClose} title={supplier ? 'Edit Supplier' : 'Add Supplier'} size="md" footer={
+    <Modal open={true} onClose={onClose} title={supplier ? 'Edit supplier' : 'Add supplier'} size="md" footer={
       <>
         <Button variant="ghost" onClick={onClose}>Cancel</Button>
         <Button onClick={handleSubmit}>{supplier ? 'Update' : 'Create'}</Button>
       </>
     }>
-      <div className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Input label="Contact Name *" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} error={errors.name} />
-          <Input label="Company *" value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} error={errors.company} />
-          <Input label="Email *" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} error={errors.email} />
-          <Input label="Phone *" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} error={errors.phone} />
-          <Input label="Address" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} />
-          <Input label="GSTIN" value={form.gstin} onChange={e => setForm({ ...form, gstin: e.target.value })} />
-        </div>
+      <div className="grid grid-cols-2 gap-3">
+        <Input label="Contact name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} error={errors.name} />
+        <Input label="Company" value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} error={errors.company} />
+        <Input label="Email" type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} error={errors.email} />
+        <Input label="Phone" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} error={errors.phone} />
+        <Input label="Address" value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} />
+        <Input label="GSTIN" value={form.gstin} onChange={e => setForm({ ...form, gstin: e.target.value })} />
       </div>
     </Modal>
   );

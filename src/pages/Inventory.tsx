@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useStore } from '../store';
-import { Badge, Button, Input, Select, Modal, SearchInput, Pagination, formatCurrency, formatDate, StatCard } from '../components/ui';
-import { Package, AlertTriangle, TrendingDown, ArrowUpDown } from 'lucide-react';
+import { Metric, Badge, Button, Input, Select, Modal, SearchInput, Pagination, formatCurrency, formatDate } from '../components/ui';
+import { ArrowUpDown } from 'lucide-react';
 
 export function Inventory() {
-  const { products, categories, inventoryTransactions, adjustStock, currentUser } = useStore();
+  const { products, inventoryTransactions, adjustStock } = useStore();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [showAdjust, setShowAdjust] = useState(false);
@@ -12,10 +12,9 @@ export function Inventory() {
   const [adjustType, setAdjustType] = useState<'stock_in' | 'stock_out' | 'damage' | 'return' | 'adjustment'>('stock_in');
   const [adjustQty, setAdjustQty] = useState('');
   const [adjustReason, setAdjustReason] = useState('');
-  const [adjustNotes, setAdjustNotes] = useState('');
   const [page, setPage] = useState(1);
   const [toast, setToast] = useState('');
-  const perPage = 10;
+  const perPage = 15;
 
   const totalStock = products.reduce((s, p) => s + p.stock, 0);
   const inventoryValue = products.reduce((s, p) => s + (p.stock * p.costPrice), 0);
@@ -36,71 +35,59 @@ export function Inventory() {
 
   const handleAdjust = () => {
     if (!adjustProduct || !adjustQty || parseInt(adjustQty) <= 0) return;
-    adjustStock(adjustProduct, adjustType, parseInt(adjustQty), adjustReason || 'Manual adjustment', adjustNotes);
-    setShowAdjust(false);
-    setAdjustProduct(''); setAdjustQty(''); setAdjustReason(''); setAdjustNotes('');
-    setToast('Stock adjusted successfully');
-    setTimeout(() => setToast(''), 3000);
+    adjustStock(adjustProduct, adjustType, parseInt(adjustQty), adjustReason || 'Manual adjustment');
+    setShowAdjust(false); setAdjustProduct(''); setAdjustQty(''); setAdjustReason('');
+    setToast('Stock adjusted'); setTimeout(() => setToast(''), 3000);
   };
 
-  const getStatus = (p: typeof products[0]) => p.stock === 0 ? 'out' : p.stock <= p.minStock ? 'low' : 'ok';
-
   return (
-    <div className="p-4 lg:p-6 space-y-4 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="p-6 lg:p-8 animate-fade-in">
+      <div className="flex items-start justify-between mb-6">
         <div>
-          <h1 className="text-lg font-semibold text-[#F2F3F5]">Inventory</h1>
-          <p className="text-sm text-[#6F747C]">Manage stock levels and adjustments</p>
+          <h1 className="text-[20px] font-semibold text-[#EFEFF1] tracking-tight">Inventory</h1>
+          <p className="text-[13px] text-[#6B6B76] mt-0.5">Track stock levels and adjustments</p>
         </div>
-        <Button size="sm" onClick={() => setShowAdjust(true)}><ArrowUpDown size={13} /> Adjust Stock</Button>
+        <Button size="sm" onClick={() => setShowAdjust(true)}><ArrowUpDown size={12} /> Adjust stock</Button>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="Total Stock" value={totalStock.toLocaleString()} icon={<Package size={14} />} />
-        <StatCard label="Inventory Value" value={formatCurrency(inventoryValue)} />
-        <StatCard label="Low Stock" value={lowStockCount.toString()} change="Needs attention" changeType="down" icon={<AlertTriangle size={14} />} />
-        <StatCard label="Out of Stock" value={outOfStockCount.toString()} change="Requires reorder" changeType="down" icon={<TrendingDown size={14} />} />
+      {/* Summary */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-5 pb-5 mb-5 border-b border-[#1A1A1D]">
+        <Metric label="Total stock" value={totalStock.toLocaleString()} />
+        <Metric label="Inventory value" value={formatCurrency(inventoryValue)} />
+        <Metric label="Low stock" value={lowStockCount.toString()} hint="Needs attention" trend="down" />
+        <Metric label="Out of stock" value={outOfStockCount.toString()} hint="Requires reorder" trend="down" />
       </div>
 
-      {/* Filters */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 mb-4">
         <SearchInput value={search} onChange={v => { setSearch(v); setPage(1); }} placeholder="Search inventory..." className="w-64" />
         <Select value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
-          options={[{ value: '', label: 'All Status' }, { value: 'ok', label: 'In Stock' }, { value: 'low', label: 'Low Stock' }, { value: 'out', label: 'Out of Stock' }]} className="w-36" />
+          options={[{ value: '', label: 'All status' }, { value: 'ok', label: 'In stock' }, { value: 'low', label: 'Low stock' }, { value: 'out', label: 'Out of stock' }]} className="w-32" />
       </div>
 
-      {/* Table */}
-      <div className="bg-[#101214] border border-[#25282C] rounded-lg overflow-hidden">
+      <div className="border border-[#1A1A1D] rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-[13px]">
             <thead>
-              <tr className="border-b border-[#25282C]">
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Product</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">SKU</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Current Stock</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Min Stock</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Status</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Stock Value</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Last Updated</th>
+              <tr className="border-b border-[#1A1A1D]">
+                <th className="px-3 py-2.5 text-left text-[11px] font-medium text-[#6B6B76]">Product</th>
+                <th className="px-3 py-2.5 text-left text-[11px] font-medium text-[#6B6B76]">SKU</th>
+                <th className="px-3 py-2.5 text-right text-[11px] font-medium text-[#6B6B76]">Current</th>
+                <th className="px-3 py-2.5 text-right text-[11px] font-medium text-[#6B6B76]">Min</th>
+                <th className="px-3 py-2.5 text-left text-[11px] font-medium text-[#6B6B76]">Status</th>
+                <th className="px-3 py-2.5 text-right text-[11px] font-medium text-[#6B6B76]">Value</th>
               </tr>
             </thead>
             <tbody>
               {paginated.map(p => {
-                const status = getStatus(p);
+                const status = p.stock === 0 ? 'out' : p.stock <= p.minStock ? 'low' : 'ok';
                 return (
-                  <tr key={p.id} className="border-b border-[#1E2024] hover:bg-[#0D0E10] transition-default">
-                    <td className="px-4 py-3 font-medium text-[#F2F3F5]">{p.name}</td>
-                    <td className="px-4 py-3 text-[#9A9EA5] font-mono text-xs">{p.sku}</td>
-                    <td className="px-4 py-3 text-right text-[#F2F3F5] font-medium">{p.stock}</td>
-                    <td className="px-4 py-3 text-right text-[#6F747C]">{p.minStock}</td>
-                    <td className="px-4 py-3">
-                      <Badge variant={status === 'out' ? 'error' : status === 'low' ? 'warning' : 'success'}>
-                        {status === 'out' ? 'Out of Stock' : status === 'low' ? 'Low Stock' : 'In Stock'}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3 text-right text-[#9A9EA5]">{formatCurrency(p.stock * p.costPrice)}</td>
-                    <td className="px-4 py-3 text-[#6F747C] text-xs">{formatDate(p.updatedAt)}</td>
+                  <tr key={p.id} className="border-b border-[#1A1A1D] last:border-0 hover:bg-[#111113] transition-colors">
+                    <td className="px-3 py-2 text-[#EFEFF1] font-medium">{p.name}</td>
+                    <td className="px-3 py-2 text-[#6B6B76] font-mono text-[11px]">{p.sku}</td>
+                    <td className="px-3 py-2 text-right text-[#EFEFF1] font-mono tabular-nums">{p.stock}</td>
+                    <td className="px-3 py-2 text-right text-[#6B6B76] font-mono tabular-nums">{p.minStock}</td>
+                    <td className="px-3 py-2"><Badge variant={status === 'out' ? 'error' : status === 'low' ? 'warning' : 'success'}>{status === 'out' ? 'Out of stock' : status === 'low' ? 'Low stock' : 'In stock'}</Badge></td>
+                    <td className="px-3 py-2 text-right text-[#A1A1AA] tabular-nums">{formatCurrency(p.stock * p.costPrice)}</td>
                   </tr>
                 );
               })}
@@ -110,64 +97,47 @@ export function Inventory() {
         <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
 
-      {/* Recent Activity */}
-      <div className="bg-[#101214] border border-[#25282C] rounded-lg p-4">
-        <h3 className="text-sm font-medium text-[#F2F3F5] mb-3">Recent Activity</h3>
-        <div className="space-y-2">
+      {/* Activity */}
+      <div className="mt-8">
+        <h2 className="text-[14px] font-semibold text-[#EFEFF1] mb-3">Recent activity</h2>
+        <div className="divide-y divide-[#1A1A1D]">
           {inventoryTransactions.slice(0, 8).map(t => (
-            <div key={t.id} className="flex items-center justify-between py-2 border-b border-[#1E2024] last:border-0">
-              <div className="flex items-center gap-3">
-                <div className={`w-1.5 h-1.5 rounded-full ${t.type === 'stock_in' || t.type === 'return' ? 'bg-[#34D399]' : 'bg-[#F87171]'}`} />
+            <div key={t.id} className="py-2 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className={`w-1.5 h-1.5 rounded-full ${t.type === 'stock_in' || t.type === 'return' ? 'bg-[#4ADE80]' : 'bg-[#F87171]'}`} />
                 <div>
-                  <p className="text-xs text-[#F2F3F5]">{t.productName}</p>
-                  <p className="text-[10px] text-[#6F747C]">{t.reason} • {t.performedBy}</p>
+                  <p className="text-[13px] text-[#EFEFF1]">{t.productName}</p>
+                  <p className="text-[11px] text-[#6B6B76]">{t.reason} · {t.performedBy}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className={`text-xs font-medium ${t.type === 'stock_in' || t.type === 'return' ? 'text-[#34D399]' : 'text-[#F87171]'}`}>
-                  {t.type === 'stock_in' || t.type === 'return' ? '+' : '-'}{t.quantity}
+                <p className={`text-[13px] font-mono tabular-nums ${t.type === 'stock_in' || t.type === 'return' ? 'text-[#4ADE80]' : 'text-[#F87171]'}`}>
+                  {t.type === 'stock_in' || t.type === 'return' ? '+' : '−'}{t.quantity}
                 </p>
-                <p className="text-[10px] text-[#6F747C]">{formatDate(t.date)}</p>
+                <p className="text-[11px] text-[#6B6B76]">{formatDate(t.date)}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Adjust Stock Modal */}
-      <Modal open={showAdjust} onClose={() => setShowAdjust(false)} title="Adjust Stock" size="md" footer={
+      <Modal open={showAdjust} onClose={() => setShowAdjust(false)} title="Adjust stock" size="md" footer={
         <>
           <Button variant="ghost" onClick={() => setShowAdjust(false)}>Cancel</Button>
-          <Button onClick={handleAdjust}>Apply Adjustment</Button>
+          <Button onClick={handleAdjust}>Apply</Button>
         </>
       }>
-        <div className="space-y-4">
+        <div className="space-y-3">
           <Select label="Product" value={adjustProduct} onChange={e => setAdjustProduct(e.target.value)}
-            options={[{ value: '', label: 'Select product...' }, ...products.map(p => ({ value: p.id, label: `${p.name} (${p.stock} in stock)` }))]} />
-          <Select label="Adjustment Type" value={adjustType} onChange={e => setAdjustType(e.target.value as any)}
-            options={[
-              { value: 'stock_in', label: 'Stock In' }, { value: 'stock_out', label: 'Stock Out' },
-              { value: 'damage', label: 'Damage' }, { value: 'return', label: 'Return' }, { value: 'adjustment', label: 'Manual Adjustment' },
-            ]} />
-          <Input label="Quantity" type="number" value={adjustQty} onChange={e => setAdjustQty(e.target.value)} placeholder="Enter quantity" />
-          <Input label="Reason" value={adjustReason} onChange={e => setAdjustReason(e.target.value)} placeholder="e.g. Damaged in transit" />
-          <Input label="Notes (optional)" value={adjustNotes} onChange={e => setAdjustNotes(e.target.value)} placeholder="Additional notes" />
-          {adjustProduct && (
-            <div className="p-3 bg-[#151719] rounded-md border border-[#25282C]">
-              <p className="text-xs text-[#6F747C]">Current stock: <span className="text-[#F2F3F5] font-medium">{products.find(p => p.id === adjustProduct)?.stock || 0}</span></p>
-              {adjustQty && (
-                <p className="text-xs text-[#6F747C] mt-1">After adjustment: <span className="text-[#F2F3F5] font-medium">
-                  {(() => { const p = products.find(pr => pr.id === adjustProduct); if (!p) return 0; const q = parseInt(adjustQty) || 0;
-                    return (adjustType === 'stock_in' || adjustType === 'return') ? p.stock + q : p.stock - q;
-                  })()}
-                </span></p>
-              )}
-            </div>
-          )}
+            options={[{ value: '', label: 'Select...' }, ...products.map(p => ({ value: p.id, label: `${p.name} (${p.stock})` }))]} />
+          <Select label="Type" value={adjustType} onChange={e => setAdjustType(e.target.value as any)}
+            options={[{ value: 'stock_in', label: 'Stock in' }, { value: 'stock_out', label: 'Stock out' }, { value: 'damage', label: 'Damage' }, { value: 'return', label: 'Return' }, { value: 'adjustment', label: 'Adjustment' }]} />
+          <Input label="Quantity" type="number" value={adjustQty} onChange={e => setAdjustQty(e.target.value)} />
+          <Input label="Reason" value={adjustReason} onChange={e => setAdjustReason(e.target.value)} />
         </div>
       </Modal>
 
-      {toast && <div className="fixed bottom-4 right-4 z-[100] px-4 py-3 rounded-lg border border-[#064E2B] bg-[#052E16] animate-fade-in"><span className="text-sm font-medium text-[#34D399]">{toast}</span></div>}
+      {toast && <div className="fixed bottom-4 right-4 z-[100] px-3 py-2 rounded-md bg-[#161618] border border-[#242428] animate-toast"><span className="text-[12px] font-medium text-[#4ADE80]">{toast}</span></div>}
     </div>
   );
 }
