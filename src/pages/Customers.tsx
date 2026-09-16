@@ -35,27 +35,27 @@ export function Customers() {
 
       <SearchInput value={search} onChange={v => { setSearch(v); setPage(1); }} placeholder="Search customers..." className="w-full sm:w-64" />
 
-      <div className="bg-[#101214] border border-[#25282C] rounded-lg overflow-hidden">
+      <div className="bg-[#101214] border border-[#25282C] rounded-xl overflow-hidden inner-glow shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#25282C]">
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Company</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Email</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Phone</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Purchases</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Outstanding</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Status</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Actions</th>
+              <tr className="border-b border-[#25282C] bg-[#0C0D0F]/50">
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Name</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Company</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Email</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Phone</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Purchases</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Outstanding</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {paginated.map(c => (
-                <tr key={c.id} className="border-b border-[#1E2024] hover:bg-[#0D0E10] transition-default">
-                  <td className="px-4 py-3">
+              {paginated.map((c, i) => (
+                <tr key={c.id} className="border-b border-[#1E2024] hover:bg-[#0D0E10] transition-all duration-200 row-highlight table-row-enter" style={{ animationDelay: `${i * 30}ms` }}>
+                  <td className="px-4 py-3.5">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-[#1A1C1F] border border-[#25282C] flex items-center justify-center text-[10px] font-medium text-[#9A9EA5]">{c.name.charAt(0)}</div>
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1A1C1F] to-[#151719] border border-[#25282C] flex items-center justify-center text-[11px] font-semibold text-[#9A9EA5]">{c.name.charAt(0)}</div>
                       <span className="font-medium text-[#F2F3F5]">{c.name}</span>
                     </div>
                   </td>

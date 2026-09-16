@@ -74,42 +74,42 @@ export function Products() {
       </div>
 
       {/* Table */}
-      <div className="bg-[#101214] border border-[#25282C] rounded-lg overflow-hidden">
+      <div className="bg-[#101214] border border-[#25282C] rounded-xl overflow-hidden inner-glow shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#25282C]">
-                <th className="px-4 py-3 text-left"><input type="checkbox" className="rounded" checked={selected.length === paginated.length && paginated.length > 0} onChange={e => setSelected(e.target.checked ? paginated.map(p => p.id) : [])} /></th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide cursor-pointer hover:text-[#9A9EA5]" onClick={() => { setSortField('name'); setSortDir(d => d === 'asc' ? 'desc' : 'asc'); }}>Product</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">SKU</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Category</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide cursor-pointer hover:text-[#9A9EA5]" onClick={() => { setSortField('sellingPrice'); setSortDir(d => d === 'asc' ? 'desc' : 'asc'); }}>Price</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide cursor-pointer hover:text-[#9A9EA5]" onClick={() => { setSortField('stock'); setSortDir(d => d === 'asc' ? 'desc' : 'asc'); }}>Stock</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#6F747C] uppercase tracking-wide">Updated</th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-[#6F747C] uppercase tracking-wide">Actions</th>
+              <tr className="border-b border-[#25282C] bg-[#0C0D0F]/50">
+                <th className="px-4 py-3.5 text-left"><input type="checkbox" className="rounded" checked={selected.length === paginated.length && paginated.length > 0} onChange={e => setSelected(e.target.checked ? paginated.map(p => p.id) : [])} /></th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider cursor-pointer hover:text-[#9A9EA5] transition-colors" onClick={() => { setSortField('name'); setSortDir(d => d === 'asc' ? 'desc' : 'asc'); }}>Product</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">SKU</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Category</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider cursor-pointer hover:text-[#9A9EA5] transition-colors" onClick={() => { setSortField('sellingPrice'); setSortDir(d => d === 'asc' ? 'desc' : 'asc'); }}>Price</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider cursor-pointer hover:text-[#9A9EA5] transition-colors" onClick={() => { setSortField('stock'); setSortDir(d => d === 'asc' ? 'desc' : 'asc'); }}>Stock</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3.5 text-left text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Updated</th>
+                <th className="px-4 py-3.5 text-right text-[11px] font-semibold text-[#6F747C] uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {paginated.map(product => {
+              {paginated.map((product, i) => {
                 const cat = categories.find(c => c.id === product.categoryId);
                 const stockStatus = product.stock === 0 ? 'out' : product.stock <= product.minStock ? 'low' : 'ok';
                 return (
-                  <tr key={product.id} className="border-b border-[#1E2024] hover:bg-[#0D0E10] transition-default">
-                    <td className="px-4 py-3"><input type="checkbox" className="rounded" checked={selected.includes(product.id)} onChange={e => setSelected(e.target.checked ? [...selected, product.id] : selected.filter(s => s !== product.id))} /></td>
-                    <td className="px-4 py-3"><span className="font-medium text-[#F2F3F5]">{product.name}</span></td>
-                    <td className="px-4 py-3 text-[#9A9EA5] font-mono text-xs">{product.sku}</td>
-                    <td className="px-4 py-3 text-[#9A9EA5]">{cat?.name || '-'}</td>
-                    <td className="px-4 py-3 text-right text-[#F2F3F5]">{formatCurrency(product.sellingPrice)}</td>
-                    <td className="px-4 py-3 text-right text-[#F2F3F5]">{product.stock}</td>
-                    <td className="px-4 py-3">
+                  <tr key={product.id} className="border-b border-[#1E2024] hover:bg-[#0D0E10] transition-all duration-200 row-highlight table-row-enter" style={{ animationDelay: `${i * 30}ms` }}>
+                    <td className="px-4 py-3.5"><input type="checkbox" className="rounded" checked={selected.includes(product.id)} onChange={e => setSelected(e.target.checked ? [...selected, product.id] : selected.filter(s => s !== product.id))} /></td>
+                    <td className="px-4 py-3.5"><span className="font-medium text-[#F2F3F5]">{product.name}</span></td>
+                    <td className="px-4 py-3.5 text-[#9A9EA5] font-mono text-xs">{product.sku}</td>
+                    <td className="px-4 py-3.5 text-[#9A9EA5]">{cat?.name || '-'}</td>
+                    <td className="px-4 py-3.5 text-right text-[#F2F3F5] font-medium">{formatCurrency(product.sellingPrice)}</td>
+                    <td className="px-4 py-3.5 text-right text-[#F2F3F5] font-medium">{product.stock}</td>
+                    <td className="px-4 py-3.5">
                       <Badge variant={stockStatus === 'out' ? 'error' : stockStatus === 'low' ? 'warning' : 'success'}>
                         {stockStatus === 'out' ? 'Out of Stock' : stockStatus === 'low' ? 'Low Stock' : 'In Stock'}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-[#6F747C] text-xs">{formatDate(product.updatedAt)}</td>
-                    <td className="px-4 py-3 text-right">
-                      <Dropdown trigger={<button className="p-1 rounded hover:bg-[#1A1C1F] text-[#6F747C]"><MoreHorizontal size={14} /></button>}
+                    <td className="px-4 py-3.5 text-[#6F747C] text-xs">{formatDate(product.updatedAt)}</td>
+                    <td className="px-4 py-3.5 text-right">
+                      <Dropdown trigger={<button className="p-1.5 rounded-md hover:bg-[#1A1C1F] text-[#6F747C] hover:text-[#F2F3F5] transition-all duration-200"><MoreHorizontal size={14} /></button>}
                         items={[
                           { label: 'Edit', icon: <Edit2 size={13} />, onClick: () => { setEditingProduct(product); setShowForm(true); } },
                           { label: 'Delete', icon: <Trash2 size={13} />, onClick: () => setDeleteId(product.id), danger: true },
